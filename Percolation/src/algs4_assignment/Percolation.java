@@ -8,10 +8,10 @@ import edu.princeton.cs.algs4.WeightedQuickUnionUF;
  * It use the two dimensions of boolean array
  * and to use WeightUnionFind, transform the tow
  * dimensions array to the one dimension one.
- *
+ * <p>
  * The coordinate of the grid begins with 1;
  * That is the upper-lefter site is (1, 1)
- *
+ * <p>
  * The index of the uf's private id[] starts at 0
  * Using two more room to store the virtual top and bottom.
  * So that the virtual top's index is id[N * N]
@@ -51,7 +51,7 @@ public class Percolation {
     /**
      * Calculate the reference of uf's private id array
      * of the current array
-     *
+     * <p>
      * The relationship of id and i, j is
      * id = (i - 1) * N + j - 1
      *
@@ -106,7 +106,7 @@ public class Percolation {
                         uf.union(calculateId(i, j), calculateId(i - 1, j));
                 }
             }
-            if (j + 1 < N + 1) {
+            if (j + 1 <= N) {
                 if (isOpen(i, j + 1)) {
                     if (!uf.connected(calculateId(i, j), calculateId(i, j + 1)))
                         uf.union(calculateId(i, j), calculateId(i, j + 1));
