@@ -1,6 +1,5 @@
 package algs4_assignment;
 
-import edu.princeton.cs.algs4.StdOut;
 import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
 /**
@@ -23,7 +22,7 @@ import edu.princeton.cs.algs4.WeightedQuickUnionUF;
  */
 public class Percolation {
 
-    private int[][] grid;
+    private byte[] grid;
 
     private WeightedQuickUnionUF uf, auxUf;
 
@@ -44,16 +43,16 @@ public class Percolation {
         }
 
         this.N = N;
-        grid = new int[N][N];
+        grid = new byte[N * N + 2];
         uf = new WeightedQuickUnionUF(N * N + 2);
-        auxUf = new WeightedQuickUnionUF(N * N + 2);
+        auxUf = new WeightedQuickUnionUF(N * N + 1);
 
         virtualTopIndex = N * N;
         virtualBottomIndex = N * N + 1;
     }
 
     /**
-     * Calculate the reference of uf's private id array
+     * Calculate the index of uf's private id array
      * of the current array
      * <p>
      * The relationship of id and i, j is
@@ -85,8 +84,7 @@ public class Percolation {
         }
 
         if (!isOpen(i, j)) {
-            grid[i - 1][j - 1] = 1;
-
+            grid[calculateId(i, j)] = 1;
 
             // Link the top and the bottom to the virtual top and bottom
             if (i == 1) {
@@ -133,7 +131,8 @@ public class Percolation {
         if (i < 1 || j < 1 || i > N || j > N) {
             throw new IndexOutOfBoundsException();
         }
-        return grid[i - 1][j - 1] == 1;
+
+        return grid[calculateId(i, j)] == 1;
 
     }
 
@@ -153,31 +152,7 @@ public class Percolation {
     }
 
     public static void main(String[] args) {
-        int[][] a = new int[][]{
-                {1, 3},
-                {2, 3},
-                {3, 3},
-                {3, 1},
-                {2, 1},
-                {1, 1},
 
-        };
-
-        Percolation percolation = new Percolation(3);
-
-        int count = 0;
-
-        for (int[] anA : a) {
-            int i = anA[0];
-            int j = anA[1];
-
-            percolation.open(i, j);
-            count++;
-
-            if (count == 4) {
-                StdOut.println("Is 3, 1 Full? " + percolation.isFull(3, 1));
-            }
-        }
     }
 
 }
