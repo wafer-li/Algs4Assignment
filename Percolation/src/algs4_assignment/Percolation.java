@@ -1,16 +1,17 @@
+package algs4_assignment;
+
 import edu.princeton.cs.algs4.StdOut;
 import edu.princeton.cs.algs4.StdRandom;
 import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
 /**
  * This is the Percolation class
- *
  * It use the two dimensions of boolean array
  * and to use WeightUnionFind, transform the tow
  * dimensions array to the one dimension one.
  *
  * @author Wafer
- * @version 1.0.0
+ * @version 1.0.1
  * @since 2016/1/27 0:36
  */
 public class Percolation {
@@ -39,8 +40,8 @@ public class Percolation {
      * current site.
      * If there is opened site, it will link it.
      *
-     * @param i The row of the specified site
-     * @param j The column of the specified site
+     * @param i The row of the specified site, within range [1, N]
+     * @param j The column of the specified site, within range [1, N]
      */
     public void open(int i, int j) {
 
@@ -61,37 +62,37 @@ public class Percolation {
              */
 
             // Link the top and the bottom to the virtual top and bottom
-            if (j == 0) {
+            if (i == 1) {
                 if (!uf.connected((i - 1) * N + j - 1, N * N))
                     uf.union((i - 1) * N + j - 1, N * N);
-            } else if (j == N - 1) {
+            } else if (i == N) {
                 if (!uf.connected((i - 1) * N + j - 1, N * N + 1))
                     uf.union((i - 1) * N + j - 1, N * N + 1);
-            } else {
-                // Union the sides of it
-                if (i + 1 < N) {
-                    if (isOpen(i + 1, j)) {
-                        if (!uf.connected((i - 1) * N + j - 1, (i) * N + j - 1))
-                            uf.union((i - 1) * N + j - 1, (i) * N + j - 1);
-                    }
+            }
+
+            // Union the sides of it
+            if (i + 1 < N + 1) {
+                if (isOpen(i + 1, j)) {
+                    if (!uf.connected((i - 1) * N + j - 1, (i) * N + j - 1))
+                        uf.union((i - 1) * N + j - 1, (i) * N + j - 1);
                 }
-                if (i - 1 > 0) {
-                    if (isOpen(i - 1, j)) {
-                        if (!uf.connected((i - 1) * N + j - 1, (i - 2) * N + j - 1))
-                            uf.union((i - 1) * N + j - 1, ((i - 2) * N) + j - 1);
-                    }
+            }
+            if (i - 1 > 0) {
+                if (isOpen(i - 1, j)) {
+                    if (!uf.connected((i - 1) * N + j - 1, (i - 2) * N + j - 1))
+                        uf.union((i - 1) * N + j - 1, ((i - 2) * N) + j - 1);
                 }
-                if (j + 1 < N) {
-                    if (isOpen(i, j + 1)) {
-                        if (!uf.connected((i - 1) * N + j - 1, (i - 1) * N + j))
-                            uf.union((i - 1) * N + j - 1, (i - 1) * N + j);
-                    }
+            }
+            if (j + 1 < N + 1) {
+                if (isOpen(i, j + 1)) {
+                    if (!uf.connected((i - 1) * N + j - 1, (i - 1) * N + j))
+                        uf.union((i - 1) * N + j - 1, (i - 1) * N + j);
                 }
-                if (j - 1 > 0) {
-                    if (isOpen(i, j - 1)) {
-                        if (!uf.connected((i - 1) * N + j - 1, (i - 1) * N + j - 2))
-                            uf.union((i - 1) * N + j, (i - 1) * N + j - 2);
-                    }
+            }
+            if (j - 1 > 0) {
+                if (isOpen(i, j - 1)) {
+                    if (!uf.connected((i - 1) * N + j - 1, (i - 1) * N + j - 2))
+                        uf.union((i - 1) * N + j, (i - 1) * N + j - 2);
                 }
             }
         }
@@ -124,22 +125,23 @@ public class Percolation {
     public static void main(String[] args) {
         // Test demo
 
-        Percolation percolation = new Percolation(10);
+        Percolation percolation = new Percolation(2);
 
         while (!percolation.percolates()) {
-            int i = StdRandom.uniform(1, 11);
-            int j = StdRandom.uniform(1, 11);
+            int i = StdRandom.uniform(1, 3);
+            int j = StdRandom.uniform(1, 3);
 
-            percolation.open(i, j);
-
-            StdOut.println("Open " + i + " , " + j + " Site");
-
-            if (percolation.isFull(i, j)) {
-                StdOut.println("The " + i + " , " + j + " is FULL");
-            } else {
-                StdOut.println("The " + i + " , " + j + " is not FULL");
+            if (!percolation.isOpen(i, j)) {
+                percolation.open(i, j);
+                StdOut.println("Open " + i + " , " + j + " Site");
+                if (percolation.isFull(i, j)) {
+                    StdOut.println("The " + i + " , " + j + " is FULL");
+                } else {
+                    StdOut.println("The " + i + " , " + j + " is not FULL");
+                }
             }
         }
+
         StdOut.println("The graph is percolated!!");
     }
 
