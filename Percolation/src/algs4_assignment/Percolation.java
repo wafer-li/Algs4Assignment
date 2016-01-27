@@ -33,8 +33,8 @@ public class Percolation {
      * The virtual top is id[N * N]
      * The virtual bottom is id[ N * N + 1]
      */
-    private final int VIRTUAL_TOP_INDEX = N * N;
-    private final int VIRTUAL_BOTTOM_INDEX = N * N + 1;
+    private int virtualTopIndex;
+    private int virtualBottomIndex;
 
 
     public Percolation(int N) {
@@ -46,6 +46,9 @@ public class Percolation {
         this.N = N;
         grid = new boolean[N][N];
         uf = new WeightedQuickUnionUF(N * N + 2);
+
+        virtualTopIndex = N * N;
+        virtualBottomIndex = N * N + 1;
     }
 
     /**
@@ -86,11 +89,11 @@ public class Percolation {
 
             // Link the top and the bottom to the virtual top and bottom
             if (i == 1) {
-                if (!uf.connected(calculateId(i, j), VIRTUAL_TOP_INDEX))
-                    uf.union(calculateId(i, j), VIRTUAL_TOP_INDEX);
+                if (!uf.connected(calculateId(i, j), virtualTopIndex))
+                    uf.union(calculateId(i, j), virtualTopIndex);
             } else if (i == N) {
-                if (!uf.connected(calculateId(i, j), VIRTUAL_BOTTOM_INDEX))
-                    uf.union(calculateId(i, j), VIRTUAL_BOTTOM_INDEX);
+                if (!uf.connected(calculateId(i, j), virtualBottomIndex))
+                    uf.union(calculateId(i, j), virtualBottomIndex);
             }
 
             // Union the sides of it
@@ -136,22 +139,13 @@ public class Percolation {
         }
 
         // if the site is connected to the top
-        return uf.connected(calculateId(i, j), VIRTUAL_TOP_INDEX);
+        return uf.connected(calculateId(i, j), virtualTopIndex);
     }
 
     public boolean percolates() {
         // if the top is connected to the bottom
-        return uf.connected(VIRTUAL_TOP_INDEX, VIRTUAL_BOTTOM_INDEX);
+        return uf.connected(virtualTopIndex, virtualBottomIndex);
     }
-
-//
-//    public boolean isConnectToBottom(int i, int j) {
-//        return uf.connected(calculateId(i, j), VIRTUAL_BOTTOM_INDEX);
-//    }
-//
-//    public boolean isConected(int i, int j, int r, int c) {
-//        return uf.connected(calculateId(i, j), calculateId(r, c));
-//    }
 
 
     public static void main(String[] args) {
@@ -187,6 +181,13 @@ public class Percolation {
 
             StdOut.println("Open site: " + i + " , " + j);
             percolation.open(i, j);
+
+            if (percolation.isOpen(i, j)) {
+                StdOut.println("The site " + i + " , " + j + " is Opened");
+            }
+            else {
+                StdOut.println("The site " + i + " , " + j + " is NOT Opened");
+            }
 
             if (percolation.isFull(i, j)) {
                 StdOut.println("The site " + i + " , " + j + " is Full");
