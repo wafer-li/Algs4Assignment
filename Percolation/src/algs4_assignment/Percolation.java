@@ -91,7 +91,9 @@ public class Percolation {
             if (i == 1) {
                 if (!uf.connected(calculateId(i, j), virtualTopIndex))
                     uf.union(calculateId(i, j), virtualTopIndex);
-            } else if (i == N) {
+            }
+
+            if (i == N) {
                 if (!uf.connected(calculateId(i, j), virtualBottomIndex))
                     uf.union(calculateId(i, j), virtualBottomIndex);
             }
@@ -147,59 +149,35 @@ public class Percolation {
         return uf.connected(virtualTopIndex, virtualBottomIndex);
     }
 
-
     public static void main(String[] args) {
-        // Test demo
-
-        int[][] a = new int[][]{
-                {1, 6},
-                {2, 6},
-                {3, 6},
-                {4, 6},
-                {5, 6},
-                {5, 5},
-                {4, 4},
-                {3, 4},
-                {2, 4},
-                {2, 3},
-                {2, 2},
-                {2, 1},
-                {3, 1},
-                {4, 1},
-                {5, 1},
-                {5, 2},
-                {6, 2},
-                {5, 4}
+        int [][] a = new int[][] {
+                {1,3},
+                {2,3},
+                {3,3},
+                {3,1},
+                {2,1},
+                {1,1},
 
         };
 
-        Percolation percolation = new Percolation(6);
+        Percolation percolation = new Percolation(50);
 
         for (int[] anA : a) {
             int i = anA[0];
             int j = anA[1];
 
-            StdOut.println("Open site: " + i + " , " + j);
+            if (i == 3 && j == 1) {
+                StdOut.println("isFull? " + percolation.isFull(3, 1));
+                StdOut.println("isPercolate? " + percolation.percolates());
+            }
+
             percolation.open(i, j);
 
-            if (percolation.isOpen(i, j)) {
-                StdOut.println("The site " + i + " , " + j + " is Opened");
-            }
-            else {
-                StdOut.println("The site " + i + " , " + j + " is NOT Opened");
+            if (i == 3 && j == 1) {
+                StdOut.println("isFull? " + percolation.isFull(3, 1));
+                StdOut.println("isPercolate? " + percolation.percolates());
             }
 
-            if (percolation.isFull(i, j)) {
-                StdOut.println("The site " + i + " , " + j + " is Full");
-            } else {
-                StdOut.println("The site " + i + " , " + j + " is NOT Full");
-            }
-
-            if (percolation.percolates()) {
-                StdOut.println("The graph is percolates!");
-            } else {
-                StdOut.println("The graph is not percolates!");
-            }
         }
     }
 
