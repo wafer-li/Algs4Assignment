@@ -23,9 +23,9 @@ import edu.princeton.cs.algs4.WeightedQuickUnionUF;
  */
 public class Percolation {
 
-    private boolean[][] grid;
+    private int[][] grid;
 
-    private WeightedQuickUnionUF uf;
+    private WeightedQuickUnionUF uf, auxUf;
 
     private int N;  // The N-by-N
 
@@ -44,8 +44,9 @@ public class Percolation {
         }
 
         this.N = N;
-        grid = new boolean[N][N];
+        grid = new int[N][N];
         uf = new WeightedQuickUnionUF(N * N + 2);
+        auxUf = new WeightedQuickUnionUF(N * N + 2);
 
         virtualTopIndex = N * N;
         virtualBottomIndex = N * N + 1;
@@ -84,13 +85,15 @@ public class Percolation {
         }
 
         if (!isOpen(i, j)) {
-            grid[i - 1][j - 1] = true;
+            grid[i - 1][j - 1] = 1;
 
 
             // Link the top and the bottom to the virtual top and bottom
             if (i == 1) {
-                if (!uf.connected(calculateId(i, j), virtualTopIndex))
+                if (!uf.connected(calculateId(i, j), virtualTopIndex)) {
                     uf.union(calculateId(i, j), virtualTopIndex);
+                    auxUf.union(calculateId(i, j), virtualTopIndex);
+                }
             }
 
             if (i == N) {
@@ -101,26 +104,26 @@ public class Percolation {
             // Union the sides of it
             if (i + 1 <= N) {
                 if (isOpen(i + 1, j)) {
-                    if (!uf.connected(calculateId(i, j), calculateId(i + 1, j)))
-                        uf.union(calculateId(i, j), calculateId(i + 1, j));
+                    uf.union(calculateId(i, j), calculateId(i + 1, j));
+                    auxUf.union(calculateId(i, j), calculateId(i + 1, j));
                 }
             }
             if (i - 1 > 0) {
                 if (isOpen(i - 1, j)) {
-                    if (!uf.connected(calculateId(i, j), calculateId(i - 1, j)))
-                        uf.union(calculateId(i, j), calculateId(i - 1, j));
+                    uf.union(calculateId(i, j), calculateId(i - 1, j));
+                    auxUf.union(calculateId(i, j), calculateId(i - 1, j));
                 }
             }
             if (j + 1 <= N) {
                 if (isOpen(i, j + 1)) {
-                    if (!uf.connected(calculateId(i, j), calculateId(i, j + 1)))
-                        uf.union(calculateId(i, j), calculateId(i, j + 1));
+                    uf.union(calculateId(i, j), calculateId(i, j + 1));
+                    auxUf.union(calculateId(i, j), calculateId(i, j + 1));
                 }
             }
             if (j - 1 > 0) {
                 if (isOpen(i, j - 1)) {
-                    if (!uf.connected(calculateId(i, j), calculateId(i, j - 1)))
-                        uf.union(calculateId(i, j), calculateId(i, j - 1));
+                    uf.union(calculateId(i, j), calculateId(i, j - 1));
+                    auxUf.union(calculateId(i, j), calculateId(i, j - 1));
                 }
             }
         }
@@ -130,7 +133,7 @@ public class Percolation {
         if (i < 1 || j < 1 || i > N || j > N) {
             throw new IndexOutOfBoundsException();
         }
-        return grid[i - 1][j - 1];
+        return grid[i - 1][j - 1] == 1;
 
     }
 
@@ -140,8 +143,8 @@ public class Percolation {
             throw new IndexOutOfBoundsException();
         }
 
-        // if the site is connected to the top
-        return uf.connected(calculateId(i, j), virtualTopIndex);
+        return uf.connected(calculateId(i, j), virtualTopIndex) && auxUf.connected(calculateId(i, j), virtualTopIndex);
+
     }
 
     public boolean percolates() {
@@ -150,34 +153,30 @@ public class Percolation {
     }
 
     public static void main(String[] args) {
-        int [][] a = new int[][] {
-                {1,3},
-                {2,3},
-                {3,3},
-                {3,1},
-                {2,1},
-                {1,1},
+        int[][] a = new int[][]{
+                {1, 3},
+                {2, 3},
+                {3, 3},
+                {3, 1},
+                {2, 1},
+                {1, 1},
 
         };
 
-        Percolation percolation = new Percolation(50);
+        Percolation percolation = new Percolation(3);
+
+        int count = 0;
 
         for (int[] anA : a) {
             int i = anA[0];
             int j = anA[1];
 
-            if (i == 3 && j == 1) {
-                StdOut.println("isFull? " + percolation.isFull(3, 1));
-                StdOut.println("isPercolate? " + percolation.percolates());
-            }
-
             percolation.open(i, j);
+            count++;
 
-            if (i == 3 && j == 1) {
-                StdOut.println("isFull? " + percolation.isFull(3, 1));
-                StdOut.println("isPercolate? " + percolation.percolates());
+            if (count == 4) {
+                StdOut.println("Is 3, 1 Full? " + percolation.isFull(3, 1));
             }
-
         }
     }
 
