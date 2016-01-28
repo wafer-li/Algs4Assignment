@@ -75,21 +75,30 @@ public class Percolation {
      * Mark the specified index of site as connected to bottom.
      * <p>
      * First we check if itself or the site around it are marked as connected to bottom
-     * if either is true, we mark the <b>origin site</b>, the <b>site arround it</b> and the <b>ancestor of the origin site</b>
-     * as connected to bottom
+     * if either is true, we mark the <b>origin site</b>, the <b>site around the origin site</b>
+     * and the <b>ancestor of the origin site</b> as connected to bottom
      *
-     * @param originIndex     The current site's index in the connectedToBottom[] (One Dimension)
-     * @param aroundSideIndex The index of the site which is around the current site in the connectedToBottom[] (One Dimension)
+     * @param originComponentIdentifier The current site's component identifier
+     *                                  in the connectedToBottom[] (One Dimension)
+     * @param aroundSideSiteComponentIdentifier The component's identifier of the site
+     *                                          which is around the current site in the
+     *                                          connectedToBottom[] (One Dimension)
      */
-    private void markAsConnectedToBottom(int originIndex, int aroundSideIndex) {
-        if (connectedToBottom[originIndex] == 1 || connectedToBottom[aroundSideIndex] == 1) {
-            // Mark it and its around side as connected to bottom;
-            connectedToBottom[originIndex] = 1;
-            connectedToBottom[aroundSideIndex] = 1;
-
-            // Mark its ancestor as connected to bottom
-            connectedToBottom[auxUf.find(originIndex)] = 1;
+    private void markAsConnectedToBottom(int originComponentIdentifier, int aroundSideSiteComponentIdentifier) {
+        if (connectedToBottom[originComponentIdentifier] == 1 || connectedToBottom[aroundSideSiteComponentIdentifier] == 1) {
+            // Mark the identifier as connect to bottom
+            connectedToBottom[originComponentIdentifier] = 1;
+            connectedToBottom[aroundSideSiteComponentIdentifier] = 1;
         }
+    }
+
+
+
+    private void union(int originIndex, int aroundSideIndex) {
+        int originSideComponentIdentifier = auxUf.find(originIndex);
+        int aroundSideComponentIdentifier = auxUf.find(aroundSideIndex);
+        markAsConnectedToBottom(originSideComponentIdentifier,aroundSideComponentIdentifier);
+        auxUf.union(originIndex, aroundSideIndex);
     }
 
 
@@ -120,7 +129,6 @@ public class Percolation {
                 auxUf.union(calculateId(i, j), virtualTopIndex);
             }
 
-
             if (i == N) {
                 connectedToBottom[calculateId(i, j)] = 1;
             }
@@ -129,26 +137,22 @@ public class Percolation {
             // Mark the connect to the top
             if (i + 1 <= N) {
                 if (isOpen(i + 1, j)) {
-                    auxUf.union(calculateId(i, j), calculateId(i + 1, j));
-                    markAsConnectedToBottom(calculateId(i, j), calculateId(i + 1, j));
+                    union(calculateId(i, j), calculateId(i + 1, j));
                 }
             }
             if (i - 1 > 0) {
                 if (isOpen(i - 1, j)) {
-                    auxUf.union(calculateId(i, j), calculateId(i - 1, j));
-                    markAsConnectedToBottom(calculateId(i, j), calculateId(i - 1, j));
+                    union(calculateId(i, j), calculateId(i - 1, j));
                 }
             }
             if (j + 1 <= N) {
                 if (isOpen(i, j + 1)) {
-                    auxUf.union(calculateId(i, j), calculateId(i, j + 1));
-                    markAsConnectedToBottom(calculateId(i, j), calculateId(i, j + 1));
+                    union(calculateId(i, j), calculateId(i, j + 1));
                 }
             }
             if (j - 1 > 0) {
                 if (isOpen(i, j - 1)) {
-                    auxUf.union(calculateId(i, j), calculateId(i, j - 1));
-                    markAsConnectedToBottom(calculateId(i, j), calculateId(i, j - 1));
+                    union(calculateId(i, j), calculateId(i, j - 1));
                 }
             }
         }
