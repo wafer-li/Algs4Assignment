@@ -1,5 +1,6 @@
 package algs4_assignment;
 
+import edu.princeton.cs.algs4.StdOut;
 import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
 /**
@@ -24,7 +25,9 @@ public class Percolation {
 
     private byte[] grid;
 
-    private WeightedQuickUnionUF uf, auxUf;
+    private byte[] connectedToBottom;
+
+    private WeightedQuickUnionUF auxUf;
 
     private int N;  // The N-by-N
 
@@ -33,7 +36,6 @@ public class Percolation {
      * The virtual bottom is id[ N * N + 1]
      */
     private int virtualTopIndex;
-    private int virtualBottomIndex;
 
 
     public Percolation(int N) {
@@ -43,13 +45,15 @@ public class Percolation {
         }
 
         this.N = N;
-        grid = new byte[N * N + 2];
-        uf = new WeightedQuickUnionUF(N * N + 2);
+
+        grid = new byte[N * N];
+        connectedToBottom = new byte[N * N + 1];
+
         auxUf = new WeightedQuickUnionUF(N * N + 1);
 
         virtualTopIndex = N * N;
-        virtualBottomIndex = N * N + 1;
     }
+
 
     /**
      * Calculate the index of uf's private id array
@@ -68,11 +72,36 @@ public class Percolation {
 
 
     /**
+     * Mark the specified index of site as connected to bottom.
+     * <p>
+     * First we check if itself or the site around it are marked as connected to bottom
+     * if either is true, we mark the <b>origin site</b>, the <b>site arround it</b> and the <b>ancestor of the origin site</b>
+     * as connected to bottom
+     *
+     * @param originIndex     The current site's index in the connectedToBottom[] (One Dimension)
+     * @param aroundSideIndex The index of the site which is around the current site in the connectedToBottom[] (One Dimension)
+     */
+    private void markAsConnectedToBottom(int originIndex, int aroundSideIndex) {
+        if (connectedToBottom[originIndex] == 1 || connectedToBottom[aroundSideIndex] == 1) {
+            // Mark it and its around side as connected to bottom;
+            connectedToBottom[originIndex] = 1;
+            connectedToBottom[aroundSideIndex] = 1;
+
+            // Mark its ancestor as connected to bottom
+            connectedToBottom[auxUf.find(originIndex)] = 1;
+        }
+    }
+
+
+    /**
      * Open and link the specified site;
      * When the specified site was opened,
      * it will search the side site of the
      * current site.
      * If there is opened site, it will link it.
+     * <p>
+     * If the site is located at the first row, link it to the virtualTop.
+     * If the site is located at the last row, mark it as connected to bottom.
      *
      * @param i The row of the specified site, within range [1, N]
      * @param j The column of the specified site, within range [1, N]
@@ -86,47 +115,54 @@ public class Percolation {
         if (!isOpen(i, j)) {
             grid[calculateId(i, j)] = 1;
 
-            // Link the top and the bottom to the virtual top and bottom
+            // Link to the top or mark as connected to bottom
             if (i == 1) {
-                if (!uf.connected(calculateId(i, j), virtualTopIndex)) {
-                    uf.union(calculateId(i, j), virtualTopIndex);
-                    auxUf.union(calculateId(i, j), virtualTopIndex);
-                }
+                auxUf.union(calculateId(i, j), virtualTopIndex);
             }
 
+
             if (i == N) {
-                if (!uf.connected(calculateId(i, j), virtualBottomIndex))
-                    uf.union(calculateId(i, j), virtualBottomIndex);
+                connectedToBottom[calculateId(i, j)] = 1;
             }
 
             // Union the sides of it
+            // Mark the connect to the top
             if (i + 1 <= N) {
                 if (isOpen(i + 1, j)) {
-                    uf.union(calculateId(i, j), calculateId(i + 1, j));
                     auxUf.union(calculateId(i, j), calculateId(i + 1, j));
+                    markAsConnectedToBottom(calculateId(i, j), calculateId(i + 1, j));
                 }
             }
             if (i - 1 > 0) {
                 if (isOpen(i - 1, j)) {
-                    uf.union(calculateId(i, j), calculateId(i - 1, j));
                     auxUf.union(calculateId(i, j), calculateId(i - 1, j));
+                    markAsConnectedToBottom(calculateId(i, j), calculateId(i - 1, j));
                 }
             }
             if (j + 1 <= N) {
                 if (isOpen(i, j + 1)) {
-                    uf.union(calculateId(i, j), calculateId(i, j + 1));
                     auxUf.union(calculateId(i, j), calculateId(i, j + 1));
+                    markAsConnectedToBottom(calculateId(i, j), calculateId(i, j + 1));
                 }
             }
             if (j - 1 > 0) {
                 if (isOpen(i, j - 1)) {
-                    uf.union(calculateId(i, j), calculateId(i, j - 1));
                     auxUf.union(calculateId(i, j), calculateId(i, j - 1));
+                    markAsConnectedToBottom(calculateId(i, j), calculateId(i, j - 1));
                 }
             }
         }
     }
 
+
+    /**
+     * Check if the site is open.
+     * By checking the gird's value.
+     *
+     * @param i The row of the site.
+     * @param j The column of the site.
+     * @return If opened, return true. If not opened, return false.
+     */
     public boolean isOpen(int i, int j) {
         if (i < 1 || j < 1 || i > N || j > N) {
             throw new IndexOutOfBoundsException();
@@ -136,23 +172,76 @@ public class Percolation {
 
     }
 
+    /**
+     * Check if the site is Full.
+     * If the site has a <b>direct</b> way connect to the top,
+     * we call it a full site.
+     *
+     * This method check this by checking the site is connected to the top.
+     * Because we do not have the virtual bottom, so there cannot be the backwash.
+     *
+     * @param i The row of the specified site
+     * @param j The column of the specified site
+     * @return If the site is full, return true. If it's not full, return false
+     */
     public boolean isFull(int i, int j) {
 
         if (i < 1 || j < 1 || i > N || j > N) {
             throw new IndexOutOfBoundsException();
         }
 
-        return uf.connected(calculateId(i, j), virtualTopIndex) && auxUf.connected(calculateId(i, j), virtualTopIndex);
-
+        return auxUf.connected(calculateId(i, j), virtualTopIndex);
     }
 
+
+    /**
+     * Check the graph is percolated.
+     *
+     * This method check this by checking the virtualTop's ancestor is connected to the bottom.
+     * As we know, the UF only check connectivity by comparing the root of the component,
+     * and if the virtualTop's root is connected to bottom, the virtualTop is definitely connected to the bottom
+     *
+     * @return If the graph is percolated, return true. If not, return false
+     */
     public boolean percolates() {
         // if the top is connected to the bottom
-        return uf.connected(virtualTopIndex, virtualBottomIndex);
+        return connectedToBottom[auxUf.find(virtualTopIndex)] == 1;
     }
 
+
+    /**
+     * The test unit
+     * @param args The program arguments
+     */
     public static void main(String[] args) {
 
+        int[][] a = new int[][]{
+                {1, 3},
+                {2, 3},
+                {3, 3},
+                {3, 1},
+                {2, 1},
+                {1, 1},
+
+        };
+
+        Percolation percolation = new Percolation(3);
+
+        for (int[] auxAn :
+                a) {
+            int i = auxAn[0];
+            int j = auxAn[1];
+
+            percolation.open(i, j);
+
+            StdOut.println("Open site " + i + " , " + j);
+            StdOut.println("Is percolated? " + percolation.percolates());
+            StdOut.println("Is " + i + " , " + j + " Full? " + percolation.isFull(i, j));
+            StdOut.println();
+        }
+
+        StdOut.println("Is 3, 1 Full " + percolation.isFull(3, 1));
     }
 
 }
+
