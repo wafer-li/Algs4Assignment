@@ -33,9 +33,9 @@ public class Percolation {
      * There is the statuses of the site.
      * By far, I define that it could has 3 statuses
      */
-    private final byte CLOSE = 0;
-    private final byte OPEN = 1;
-    private final byte CONNECT_TO_BOTTOM = 2;
+    private static final byte CLOSE = 0;
+    private static final byte OPEN = 1;
+    private static final byte CONNECT_TO_BOTTOM = 2;
 
     /**
      * The virtual top is id[N * N]
