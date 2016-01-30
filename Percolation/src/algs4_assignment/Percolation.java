@@ -25,11 +25,17 @@ public class Percolation {
 
     private byte[] grid;
 
-    private byte[] connectedToBottom;
-
     private WeightedQuickUnionUF auxUf;
 
     private int N;  // The N-by-N
+
+    /**
+     * There is the statuses of the site.
+     * By far, I define that it could has 3 statuses
+     */
+    private final byte CLOSE = 0;
+    private final byte OPEN = 1;
+    private final byte CONNECT_TO_BOTTOM = 2;
 
     /**
      * The virtual top is id[N * N]
@@ -46,8 +52,7 @@ public class Percolation {
 
         this.N = N;
 
-        grid = new byte[N * N];
-        connectedToBottom = new byte[N * N + 1];
+        grid = new byte[N * N + 1];
 
         auxUf = new WeightedQuickUnionUF(N * N + 1);
 
@@ -79,16 +84,15 @@ public class Percolation {
      * and the <b>ancestor of the origin site</b> as connected to bottom
      *
      * @param originComponentIdentifier The current site's component identifier
-     *                                  in the connectedToBottom[] (One Dimension)
+     *                                  in the grid[] (One Dimension)
      * @param aroundSideSiteComponentIdentifier The component's identifier of the site
      *                                          which is around the current site in the
-     *                                          connectedToBottom[] (One Dimension)
+     *                                          grid[] (One Dimension)
      */
     private void markAsConnectedToBottom(int originComponentIdentifier, int aroundSideSiteComponentIdentifier) {
-        if (connectedToBottom[originComponentIdentifier] == 1 || connectedToBottom[aroundSideSiteComponentIdentifier] == 1) {
-            // Mark the identifier as connect to bottom
-            connectedToBottom[originComponentIdentifier] = 1;
-            connectedToBottom[aroundSideSiteComponentIdentifier] = 1;
+        if (grid[originComponentIdentifier] == CONNECT_TO_BOTTOM || grid[aroundSideSiteComponentIdentifier] == CONNECT_TO_BOTTOM) {
+            grid[originComponentIdentifier] = CONNECT_TO_BOTTOM;
+            grid[aroundSideSiteComponentIdentifier] = CONNECT_TO_BOTTOM;
         }
     }
 
@@ -122,7 +126,7 @@ public class Percolation {
         }
 
         if (!isOpen(i, j)) {
-            grid[calculateId(i, j)] = 1;
+            grid[calculateId(i, j)] = OPEN;
 
             // Link to the top or mark as connected to bottom
             if (i == 1) {
@@ -130,7 +134,7 @@ public class Percolation {
             }
 
             if (i == N) {
-                connectedToBottom[calculateId(i, j)] = 1;
+                grid[calculateId(i, j)] = CONNECT_TO_BOTTOM;
             }
 
             // Union the sides of it
@@ -172,7 +176,7 @@ public class Percolation {
             throw new IndexOutOfBoundsException();
         }
 
-        return grid[calculateId(i, j)] == 1;
+        return grid[calculateId(i, j)] != CLOSE;
 
     }
 
@@ -209,7 +213,7 @@ public class Percolation {
      */
     public boolean percolates() {
         // if the top is connected to the bottom
-        return connectedToBottom[auxUf.find(virtualTopIndex)] == 1;
+        return grid[auxUf.find(virtualTopIndex)] == CONNECT_TO_BOTTOM;
     }
 
 
