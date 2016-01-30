@@ -98,3 +98,15 @@ The instructions are as below:
 5. `isFull()`
 
     > Check if the site is connected to the virtual top
+    
+
+### Small improvement of Improvement 2
+
+Because byte can represent -127 ~ 128, so we can only use one array to represent the 3 statuses of the site.
+
+So, we just use one byte array.
+
+**Notice:**
+
+To using the UF's `find()` method to locate the identifier of the site, we can only use the **One Dimension** array.  
+Or, we must implement a 2 dimension UF object to achieve this.
