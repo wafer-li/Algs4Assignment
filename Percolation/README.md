@@ -36,9 +36,10 @@ Because using the tow virtual will cause the backwash problem.
 >> If a site has a **direct** path connect to the top, we call it full.
 
 > Backwash: 
->> The most simple idea to check whether the site is full is to check whether it's connected to the top.
+>> The most simple idea to check whether the site is full is to check whether it's connected to the top.  
 But if the map is percolated, the site which connect to the bottom and has **NO DIRECT PATH** connect to the top is also
-connect to the top. It's just like the water pouring into the bottom, and it surge up to the site. That is called **Backwash**
+connect to the top. It's just like the water pouring into the bottom, and it surge up to the site.  
+That is called **Backwash**.
 
 
 ## Improve 1: Using the two UF object to solve the backwash problem (Easier)
@@ -79,7 +80,7 @@ And when the virtualTop's component is connected to the bottom, the map is perco
 
 Because no virtualBottom site in the UF, it will not cause the backwash
 
-And we reduce the memory usage by cutting off a UF, although we add a extra `byte[]`, though it we cut off 2 `int[]`,
+And we reduce the memory usage by cutting off a UF, although we add a extra `byte[]`, through it we cut off 2 `int[]`,
 so it is worth doing that.
 
 The instructions are as below:
