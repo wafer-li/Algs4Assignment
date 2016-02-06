@@ -182,7 +182,7 @@ public class Percolation {
      * If the site has a <b>direct</b> way connect to the top,
      * we call it a full site.
      *
-     * This method do this by checking whether the site is connected to the top.
+     * This method does this by checking whether the site is connected to the top.
      * Because we do not have the virtual bottom, so backwash won't happen.
      *
      * @param i The row of the specified site
@@ -202,8 +202,8 @@ public class Percolation {
     /**
      * Check if the graph percolates.
      *
-     * This method do this by checking the virtualTop's ancestor is connected to the bottom.
-     * As we know, the UF only check connectivity by comparing the root of the component,
+     * This method does this by checking the virtualTop's ancestor is connected to the bottom.
+     * As we know, the UF only checks connectivity by comparing the root of the component,
      * and if the virtualTop's root is connected to bottom, the virtualTop is definitely connected to the bottom
      *
      * @return If the graph is percolated, return true. If not, return false
