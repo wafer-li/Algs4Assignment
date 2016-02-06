@@ -5,15 +5,15 @@ import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
 /**
  * This is the Percolation class
- * It use the two dimensions of boolean array
- * and to use WeightUnionFind, transform the tow
+ * It uses a two dimensions of boolean array
+ * and a WeightUnionFindUF to transform the tow
  * dimensions array to the one dimension one.
  * <p>
  * The coordinate of the grid begins with 1;
  * That is the upper-lefter site is (1, 1)
  * <p>
  * The index of the uf's private id[] starts at 0
- * Using two more room to store the virtual top and bottom.
+ * Use two more rooms to store the virtual top and bottom.
  * So that the virtual top's index is id[N * N]
  * the bottom's index is id[N * N + 1]
  *
@@ -80,7 +80,7 @@ public class Percolation {
      * Mark the specified index of site as connected to bottom.
      * <p>
      * First we check if itself or the site around it are marked as connected to bottom
-     * if either is true, we mark the <b>origin site</b>, the <b>site around the origin site</b>
+     * if so, we mark the <b>origin site</b>, the <b>site around the origin site</b>
      * and the <b>ancestor of the origin site</b> as connected to bottom
      *
      * @param originComponentIdentifier The current site's component identifier
@@ -107,11 +107,8 @@ public class Percolation {
 
 
     /**
-     * Open and link the specified site;
-     * When the specified site was opened,
-     * it will search the side site of the
-     * current site.
-     * If there is opened site, it will link it.
+     * Open the specified site;
+     * Link all the open around sites to the specified site.
      * <p>
      * If the site is located at the first row, link it to the virtualTop.
      * If the site is located at the last row, mark it as connected to bottom.
@@ -185,8 +182,8 @@ public class Percolation {
      * If the site has a <b>direct</b> way connect to the top,
      * we call it a full site.
      *
-     * This method check this by checking the site is connected to the top.
-     * Because we do not have the virtual bottom, so there cannot be the backwash.
+     * This method does this by checking whether the site is connected to the top.
+     * Because we do not have the virtual bottom, so backwash won't happen.
      *
      * @param i The row of the specified site
      * @param j The column of the specified site
@@ -203,10 +200,10 @@ public class Percolation {
 
 
     /**
-     * Check the graph is percolated.
+     * Check if the graph percolates.
      *
-     * This method check this by checking the virtualTop's ancestor is connected to the bottom.
-     * As we know, the UF only check connectivity by comparing the root of the component,
+     * This method does this by checking the virtualTop's ancestor is connected to the bottom.
+     * As we know, the UF only checks connectivity by comparing the root of the component,
      * and if the virtualTop's root is connected to bottom, the virtualTop is definitely connected to the bottom
      *
      * @return If the graph is percolated, return true. If not, return false
