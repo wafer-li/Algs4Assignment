@@ -149,6 +149,11 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
             int index = (shuffleIndexes[shuffleIndexesIterator] + head) % items.length;
             shuffleIndexesIterator++;
+
+            if (!hasNext()) {
+                throw new NoSuchElementException();
+            }
+
             return items[index];
         }
 
