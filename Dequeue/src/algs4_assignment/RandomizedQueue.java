@@ -15,6 +15,8 @@ import java.util.NoSuchElementException;
  */
 public class RandomizedQueue<Item> implements Iterable<Item> {
 
+    private static final int INIT_SIZE = 10;
+
     private int head;
     private int last;
 
@@ -22,10 +24,13 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
     private Item[] items;
 
-    private static final int INIT_SIZE = 10;
+    public RandomizedQueue() {
+        items = (Item[]) new Object[INIT_SIZE];
+    }
 
-    private void resize(int size) {
-        Item[] newItems = (Item[]) new Object[size];
+
+    private void resize(int newSize) {
+        Item[] newItems = (Item[]) new Object[newSize];
 
         // Linearly iterate the items
         int i = 0;
@@ -43,17 +48,16 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         last = i;
     }
 
-    public RandomizedQueue() {
-        items = (Item[]) new Object[INIT_SIZE];
-    }
 
     public boolean isEmpty() {
         return size == 0;
     }
 
+
     public int size() {
         return size;
     }
+
 
     public void enqueue(Item item) {
         if (item == null) {
@@ -73,6 +77,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
             size++;
         }
     }
+
 
     public Item dequeue() {
 
@@ -106,6 +111,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         return item;
     }
 
+
     public Item sample() {
 
         if (isEmpty()) {
@@ -115,6 +121,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         int itemIndex = (StdRandom.uniform(size) + head) % items.length;
         return items[itemIndex];
     }
+
 
     @Override
     public Iterator<Item> iterator() {
@@ -136,10 +143,12 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
             StdRandom.shuffle(shuffleIndexes);
         }
 
+
         @Override
         public boolean hasNext() {
             return shuffleIndexesIterator < shuffleIndexes.length;
         }
+
 
         @Override
         public Item next() {
@@ -156,6 +165,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
             return items[index];
         }
+
 
         @Override
         public void remove() {

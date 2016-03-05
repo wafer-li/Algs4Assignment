@@ -35,6 +35,12 @@ public class Deque<Item> implements Iterable<Item> {
 
     private int size;
 
+    public Deque() {
+        head = null;
+        last = null;
+        size = 0;
+    }
+
 
     private void checkAddNull(Item item) {
         if (item == null) {
@@ -50,13 +56,6 @@ public class Deque<Item> implements Iterable<Item> {
     }
 
 
-    public Deque() {
-        head = null;
-        last = null;
-        size = 0;
-    }
-
-
     public boolean isEmpty() {
         return size == 0;
     }
@@ -67,7 +66,7 @@ public class Deque<Item> implements Iterable<Item> {
     }
 
 
-    public void addFirst(Item item) throws NullPointerException {
+    public void addFirst(Item item) {
 
         checkAddNull(item);
 
@@ -86,7 +85,7 @@ public class Deque<Item> implements Iterable<Item> {
     }
 
 
-    public void addLast(Item item) throws NullPointerException {
+    public void addLast(Item item) {
 
         checkAddNull(item);
 
@@ -105,7 +104,7 @@ public class Deque<Item> implements Iterable<Item> {
     }
 
 
-    public Item removeFirst() throws NoSuchElementException {
+    public Item removeFirst() {
 
         checkRemoveFromEmpty();
 
@@ -121,7 +120,7 @@ public class Deque<Item> implements Iterable<Item> {
     }
 
 
-    public Item removeLast() throws NoSuchElementException {
+    public Item removeLast() {
 
         checkRemoveFromEmpty();
 
@@ -139,11 +138,11 @@ public class Deque<Item> implements Iterable<Item> {
         return item;
     }
 
+
     @Override
     public Iterator<Item> iterator() {
         return new DequeueIterator();
     }
-
 
     private class DequeueIterator implements Iterator<Item> {
 
