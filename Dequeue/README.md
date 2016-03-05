@@ -15,7 +15,7 @@ This assignment is much easier than the previous one.
 
 ## Deque
 
-Accroding to the performance requirement. The best way to implement it is to use the **linked-list**.
+According to the performance requirement. The best way to implement it is to use the **linked-list**.
 
 Although there is a hint which asks me to use the sentinel node, I decided to use the **double** linked list,
 which has two pointers of `prev` and the `next`.  
@@ -28,7 +28,7 @@ And with this it can prevent the loitering.
 
 The Randomized Queue is a little more complicate than the Deque.
 
-Accroding to the performance requirement, using the array implementation will be the best.
+According to the performance requirement, using the array implementation will be the best.
 
 And because of the array implementation, we need to make the `head` and the `last` pointers have the ability to
 travel back to the beginning of the array.  
