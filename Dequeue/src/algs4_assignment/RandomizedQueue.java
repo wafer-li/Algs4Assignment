@@ -156,11 +156,11 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
                 throw new NoSuchElementException();
             }
 
-            int index = (shuffleIndexes[shuffleIndexesIterator] + head) % items.length;
-
             if (!hasNext()) {
                 throw new NoSuchElementException();
             }
+
+            int index = (shuffleIndexes[shuffleIndexesIterator] + head) % items.length;
 
             shuffleIndexesIterator++;
             return items[index];
@@ -179,16 +179,25 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         // Unit test
         RandomizedQueue<Integer> randomizedQueue = new RandomizedQueue<>();
 
-        // Enqueue, Dequeue, Sample
-        StdOut.println("Is empty? " + randomizedQueue.isEmpty());
-        StdOut.println("Enqueue 102");
-        randomizedQueue.enqueue(102);
-        StdOut.println("Dequeue " + randomizedQueue.dequeue());
-        StdOut.println("The size is " + randomizedQueue.size());
-        StdOut.println("The size is " + randomizedQueue.size());
-        StdOut.println("Enqueue 139");
-        randomizedQueue.enqueue(139);
-        StdOut.println("The size is " + randomizedQueue.size());
-        StdOut.println("The sample is " + randomizedQueue.sample());
+        // next() throw NoSuchElementException
+        Iterator<Integer> iterator = randomizedQueue.iterator();
+
+        randomizedQueue.enqueue(1);
+        randomizedQueue.enqueue(2);
+
+        try {
+            for (int i = 0; i < 100; i++) {
+                StdOut.println(iterator.next());
+            }
+        }
+        catch (NoSuchElementException e) {
+            StdOut.print("Catch NoSuchElementException ");
+            if (randomizedQueue.isEmpty()) {
+                StdOut.println("Due to empty");
+            }
+            else {
+                StdOut.print("Due to other reason");
+            }
+        }
     }
 }
