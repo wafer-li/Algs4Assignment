@@ -2,6 +2,7 @@ package algs4_assignment;
 
 import edu.princeton.cs.algs4.StdIn;
 import edu.princeton.cs.algs4.StdOut;
+import edu.princeton.cs.algs4.StdRandom;
 
 /**
  * This is the Subset class.
@@ -15,16 +16,15 @@ public class Subset {
     public static void main(String [] args) {
         int k = Integer.parseInt(args[0]);
         String [] strings = StdIn.readAllStrings();
-
-        RandomizedQueue<String> stringRandomizedQueue = new RandomizedQueue<>();
-
-        for (String s :
-                strings) {
-            stringRandomizedQueue.enqueue(s);
-        }
+        StdRandom.shuffle(strings);
+        Deque<String> deque = new Deque<>();
 
         for (int i = 0; i < k; i++) {
-            StdOut.println(stringRandomizedQueue.dequeue());
+            deque.addFirst(strings[i]);
+        }
+
+        for (String s: deque) {
+            StdOut.println(s);
         }
     }
 }
