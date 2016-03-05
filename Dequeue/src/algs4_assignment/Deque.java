@@ -111,6 +111,11 @@ public class Deque<Item> implements Iterable<Item> {
 
         Item item = head.item;
         head = head.next;
+
+        if (head == null) {
+            last = null;
+        }
+
         size--;
         return item;
     }
@@ -122,7 +127,14 @@ public class Deque<Item> implements Iterable<Item> {
 
         Item item = last.item;
         last = last.prev;
-        last.next = null;
+
+        if (last == null) {
+            head = null;
+        }
+        else {
+            last.next = null;
+        }
+
         size--;
         return item;
     }
@@ -163,109 +175,30 @@ public class Deque<Item> implements Iterable<Item> {
 
     public static void main(String[] args) {
 
-        // Normal test
+        // Add first, remove last
         Deque<Integer> deque = new Deque<>();
         StdOut.println("Is deque empty? " + deque.isEmpty());
-        StdOut.println("The size of the deque is " + deque.size());
 
-        StdOut.println();
-
+        StdOut.println("Add first 1");
         deque.addFirst(1);
-        StdOut.println("Add 1 at first.");
-        StdOut.println("Is deque empty? " + deque.isEmpty());
-        StdOut.println("The size of the deque is " + deque.size());
+
+        StdOut.println("Remove last");
+        StdOut.println(deque.removeLast());
 
         StdOut.println();
 
-        deque.addLast(2);
-        StdOut.println("Add 2 at the last");
-        StdOut.println("Is deque empty? " + deque.isEmpty());
-        StdOut.println("The size of the deque is " + deque.size());
+        // Add last, remove last
+        StdOut.println("Add Last");
+        deque.addLast(0);
+        StdOut.println("Remove Last");
+        deque.removeLast();
 
         StdOut.println();
 
-        int n = deque.removeFirst();
-        StdOut.println("Remove from first");
-        StdOut.println("The item being removed is " + n);
-        StdOut.println("Is deque empty? " + deque.isEmpty());
-        StdOut.println("The size of the deque is " + deque.size());
-
-        StdOut.println();
-
-        deque.addFirst(1);
-        n = deque.removeLast();
-        StdOut.println("The item being removed is " + n);
-        StdOut.println("Is deque empty? " + deque.isEmpty());
-        StdOut.println("The size of the deque is " + deque.size());
-
-        StdOut.println();
-
-        // Corner case test
-        while (!deque.isEmpty()) {
-            deque.removeFirst();
-        }
-
-        try {
-            deque.removeFirst();
-        }
-        catch (NoSuchElementException e) {
-            StdOut.println("NoSuchElementException: Cannot remove from first!");
-            StdOut.println();
-        }
-
-        try {
-            deque.removeLast();
-        }
-        catch (NoSuchElementException e) {
-            StdOut.println("NoSuchElementException: Cannot remove from last!");
-            StdOut.println();
-        }
-
-        try {
-            deque.addFirst(null);
-        }
-        catch (NullPointerException e) {
-            StdOut.println("NullPointerException: Cannot add null object at First!");
-            StdOut.println();
-        }
-
-        try {
-            deque.addLast(null);
-        }
-        catch (NullPointerException e) {
-            StdOut.println("NullPointerException: Cannot add null object at Last!");
-            StdOut.println();
-        }
-
-        Iterator<Integer> iterator = deque.iterator();
-
-        try {
-            iterator.remove();
-        }
-        catch (UnsupportedOperationException e) {
-            StdOut.println("UnsupportedOperationException: We do not support remove() in the iterator!");
-            StdOut.println();
-        }
-
-        deque.addFirst(1);
-        deque.addFirst(2);
-        deque.addFirst(3);
-        deque.addFirst(4);
-        deque.addFirst(5);
-        deque.addFirst(6);
-
-        iterator = deque.iterator();
-
-        while (iterator.hasNext()) {
-            StdOut.println(iterator.next());
-        }
-
-        try {
-            iterator.next();
-        }
-        catch (NoSuchElementException e) {
-            StdOut.println("NoSuchElementException: End of the iteration!");
-            StdOut.println();
-        }
+        // Add last, remove first
+        StdOut.println("Add Last");
+        deque.addLast(0);
+        StdOut.println("Remove first");
+        deque.removeFirst();
     }
 }

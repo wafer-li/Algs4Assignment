@@ -92,12 +92,26 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
         // Remove head
         items[head] = null;
-        head = (head + 1) % items.length;
+
+        if (head == last) {
+            // By now, there is no item in array
+            head = 0;
+            last = 0;
+        }
+        else {
+            head = (head + 1) % items.length;
+        }
+
         size--;
         return item;
     }
 
     public Item sample() {
+
+        if (isEmpty()) {
+            throw new NoSuchElementException();
+        }
+
         int itemIndex = (StdRandom.uniform(size) + head) % items.length;
         return items[itemIndex];
     }
@@ -148,131 +162,18 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
     public static void main(String[] args) {
         // Unit test
-
-        // Normal
         RandomizedQueue<Integer> randomizedQueue = new RandomizedQueue<>();
 
-        StdOut.println("Insert 20 items.");
-        for (int i = 1; i <= 20; i++) {
-            randomizedQueue.enqueue(i);
-        }
-
-        StdOut.println();
-
-        StdOut.println("Iterate all items at random");
-        for (Integer integer : randomizedQueue) {
-            StdOut.print(integer);
-            StdOut.print(", ");
-        }
-
-        StdOut.println();
-        StdOut.println();
-
-        StdOut.println("Try another iterator");
-        for (Integer integer : randomizedQueue) {
-            StdOut.print(integer);
-            StdOut.print(", ");
-        }
-
-        StdOut.println();
-        StdOut.println();
-
-        // Test head > last
-        StdOut.println("Test head > last");
-        for (int i = 0; i < 5 ; i++) {
-            randomizedQueue.dequeue();
-            randomizedQueue.enqueue(i);
-        }
-
-        StdOut.println();
-        StdOut.println("Now iterator it!");
-        for (Integer i :
-                randomizedQueue) {
-            StdOut.print(i);
-            StdOut.print(", ");
-        }
-
-        StdOut.println();
-        StdOut.println();
-
-        StdOut.println("Test the sample() method");
+        // Enqueue, Dequeue, Sample
+        StdOut.println("Is empty? " + randomizedQueue.isEmpty());
+        StdOut.println("Enqueue 102");
+        randomizedQueue.enqueue(102);
+        StdOut.println("Dequeue " + randomizedQueue.dequeue());
+        StdOut.println("The size is " + randomizedQueue.size());
+        StdOut.println("The size is " + randomizedQueue.size());
+        StdOut.println("Enqueue 139");
+        randomizedQueue.enqueue(139);
+        StdOut.println("The size is " + randomizedQueue.size());
         StdOut.println("The sample is " + randomizedQueue.sample());
-
-        StdOut.println();
-
-        StdOut.println("Remove all the items.");
-        while (!randomizedQueue.isEmpty()) {
-            StdOut.print(randomizedQueue.dequeue());
-            StdOut.print(", ");
-        }
-
-        StdOut.println();
-        StdOut.println();
-
-        // Special
-        if (randomizedQueue.isEmpty()) {
-            StdOut.println("Now the queue is empty");
-        } else {
-            StdOut.println("The queue is not empty");
-        }
-
-        StdOut.println();
-
-        StdOut.println("Try to insert one item.");
-        randomizedQueue.enqueue(1);
-        StdOut.println();
-
-        StdOut.println("Test the queue if is empty");
-        StdOut.println("Is the queue empty? " + randomizedQueue.isEmpty());
-
-        StdOut.println();
-
-        StdOut.println("Now remove it.");
-        randomizedQueue.dequeue();
-
-        StdOut.println();
-
-        StdOut.println("Test the queue if is empty");
-        StdOut.println("Is the queue empty? " + randomizedQueue.isEmpty());
-
-        StdOut.println();
-
-        StdOut.println("Now, reinsert it.");
-        randomizedQueue.enqueue(1);
-
-        StdOut.println();
-
-        StdOut.println("Test the queue if is empty");
-        StdOut.println("Is the queue empty? " + randomizedQueue.isEmpty());
-
-        StdOut.println();
-
-        StdOut.println("Restore empty");
-        while (!randomizedQueue.isEmpty()) {
-            randomizedQueue.dequeue();
-        }
-
-        // Corner case
-        try {
-            randomizedQueue.enqueue(null);
-        }
-        catch (NullPointerException e) {
-            StdOut.println("Try to enqueue a null object");
-        }
-
-        try {
-            randomizedQueue.dequeue();
-        }
-        catch (NoSuchElementException e) {
-            StdOut.println("Try to dequeue from a empty queue");
-        }
-
-        try {
-            randomizedQueue.iterator().remove();
-        }
-        catch (UnsupportedOperationException e) {
-            StdOut.println("Try to use iterator's remove() method");
-        }
-
     }
 }
