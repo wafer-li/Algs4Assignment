@@ -6,16 +6,16 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
- * This is the Dequeue class.
+ * This is the Deque class.
  * According to the performance requirement,
- * Dequeue need to guarantee the constant worst-case time,
+ * Deque need to guarantee the constant worst-case time,
  * so use the dual linked-list implementation
  *
  * @author Wafer
  * @version 1.0.0
  * @since 2016/2/6 5:39
  */
-public class Dequeue<Item> implements Iterable<Item> {
+public class Deque<Item> implements Iterable<Item> {
 
     private class Node {
         public Item item;
@@ -50,7 +50,7 @@ public class Dequeue<Item> implements Iterable<Item> {
     }
 
 
-    public Dequeue() {
+    public Deque() {
         head = null;
         last = null;
         size = 0;
@@ -164,49 +164,49 @@ public class Dequeue<Item> implements Iterable<Item> {
     public static void main(String[] args) {
 
         // Normal test
-        Dequeue<Integer> dequeue = new Dequeue<>();
-        StdOut.println("Is dequeue empty? " + dequeue.isEmpty());
-        StdOut.println("The size of the dequeue is " + dequeue.size());
+        Deque<Integer> deque = new Deque<>();
+        StdOut.println("Is deque empty? " + deque.isEmpty());
+        StdOut.println("The size of the deque is " + deque.size());
 
         StdOut.println();
 
-        dequeue.addFirst(1);
+        deque.addFirst(1);
         StdOut.println("Add 1 at first.");
-        StdOut.println("Is dequeue empty? " + dequeue.isEmpty());
-        StdOut.println("The size of the dequeue is " + dequeue.size());
+        StdOut.println("Is deque empty? " + deque.isEmpty());
+        StdOut.println("The size of the deque is " + deque.size());
 
         StdOut.println();
 
-        dequeue.addLast(2);
+        deque.addLast(2);
         StdOut.println("Add 2 at the last");
-        StdOut.println("Is dequeue empty? " + dequeue.isEmpty());
-        StdOut.println("The size of the dequeue is " + dequeue.size());
+        StdOut.println("Is deque empty? " + deque.isEmpty());
+        StdOut.println("The size of the deque is " + deque.size());
 
         StdOut.println();
 
-        int n = dequeue.removeFirst();
+        int n = deque.removeFirst();
         StdOut.println("Remove from first");
         StdOut.println("The item being removed is " + n);
-        StdOut.println("Is dequeue empty? " + dequeue.isEmpty());
-        StdOut.println("The size of the dequeue is " + dequeue.size());
+        StdOut.println("Is deque empty? " + deque.isEmpty());
+        StdOut.println("The size of the deque is " + deque.size());
 
         StdOut.println();
 
-        dequeue.addFirst(1);
-        n = dequeue.removeLast();
+        deque.addFirst(1);
+        n = deque.removeLast();
         StdOut.println("The item being removed is " + n);
-        StdOut.println("Is dequeue empty? " + dequeue.isEmpty());
-        StdOut.println("The size of the dequeue is " + dequeue.size());
+        StdOut.println("Is deque empty? " + deque.isEmpty());
+        StdOut.println("The size of the deque is " + deque.size());
 
         StdOut.println();
 
         // Corner case test
-        while (!dequeue.isEmpty()) {
-            dequeue.removeFirst();
+        while (!deque.isEmpty()) {
+            deque.removeFirst();
         }
 
         try {
-            dequeue.removeFirst();
+            deque.removeFirst();
         }
         catch (NoSuchElementException e) {
             StdOut.println("NoSuchElementException: Cannot remove from first!");
@@ -214,7 +214,7 @@ public class Dequeue<Item> implements Iterable<Item> {
         }
 
         try {
-            dequeue.removeLast();
+            deque.removeLast();
         }
         catch (NoSuchElementException e) {
             StdOut.println("NoSuchElementException: Cannot remove from last!");
@@ -222,7 +222,7 @@ public class Dequeue<Item> implements Iterable<Item> {
         }
 
         try {
-            dequeue.addFirst(null);
+            deque.addFirst(null);
         }
         catch (NullPointerException e) {
             StdOut.println("NullPointerException: Cannot add null object at First!");
@@ -230,14 +230,14 @@ public class Dequeue<Item> implements Iterable<Item> {
         }
 
         try {
-            dequeue.addLast(null);
+            deque.addLast(null);
         }
         catch (NullPointerException e) {
             StdOut.println("NullPointerException: Cannot add null object at Last!");
             StdOut.println();
         }
 
-        Iterator<Integer> iterator = dequeue.iterator();
+        Iterator<Integer> iterator = deque.iterator();
 
         try {
             iterator.remove();
@@ -247,14 +247,14 @@ public class Dequeue<Item> implements Iterable<Item> {
             StdOut.println();
         }
 
-        dequeue.addFirst(1);
-        dequeue.addFirst(2);
-        dequeue.addFirst(3);
-        dequeue.addFirst(4);
-        dequeue.addFirst(5);
-        dequeue.addFirst(6);
+        deque.addFirst(1);
+        deque.addFirst(2);
+        deque.addFirst(3);
+        deque.addFirst(4);
+        deque.addFirst(5);
+        deque.addFirst(6);
 
-        iterator = dequeue.iterator();
+        iterator = deque.iterator();
 
         while (iterator.hasNext()) {
             StdOut.println(iterator.next());
