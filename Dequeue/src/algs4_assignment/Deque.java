@@ -114,6 +114,9 @@ public class Deque<Item> implements Iterable<Item> {
         if (head == null) {
             last = null;
         }
+        else {
+            head.prev = null;
+        }
 
         size--;
         return item;
