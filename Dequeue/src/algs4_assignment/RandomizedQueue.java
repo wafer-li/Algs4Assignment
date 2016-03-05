@@ -1,5 +1,6 @@
 package algs4_assignment;
 
+import edu.princeton.cs.algs4.StdOut;
 import edu.princeton.cs.algs4.StdRandom;
 
 import java.util.Iterator;
@@ -17,7 +18,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     private int head;
     private int last;
 
-    private int size;
+    private int size;   // The element's amount in the queue
 
     private Item[] items;
 
@@ -27,11 +28,19 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         Item[] newItems = (Item[]) new Object[size];
 
         // Linearly iterate the items
-        for (int i = 0, j = head; i < newItems.length && j <= last; i++, j = (j + 1) % items.length) {
+        int i = 0;
+        int j;
+        for (j = head; j != last; i++, j = (j + 1) % items.length) {
             newItems[i] = items[j];
         }
 
+        // Copy the item in items[last]
+        newItems[i] = items[j];
+
         items = newItems;
+
+        head = 0;
+        last = i;
     }
 
     public RandomizedQueue() {
@@ -55,9 +64,14 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
             resize(2 * items.length);
         }
 
-        last = (last + 1) % items.length;
-        items[last] = item;
-        size++;
+        if (isEmpty()) {
+            items[last] = item;
+            size++;
+        } else {
+            last = (last + 1) % items.length;
+            items[last] = item;
+            size++;
+        }
     }
 
     public Item dequeue() {
@@ -84,7 +98,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     }
 
     public Item sample() {
-        int itemIndex = (StdRandom.uniform(size) + head ) % items.length;
+        int itemIndex = (StdRandom.uniform(size) + head) % items.length;
         return items[itemIndex];
     }
 
@@ -98,11 +112,11 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
         private int[] shuffleIndexes;
 
-        private int shffleIndexesIterator;
+        private int shuffleIndexesIterator;
 
         public RandomizedQueueIterator() {
             shuffleIndexes = new int[size];
-            for (int i : shuffleIndexes) {
+            for (int i = 0; i < size; i++) {
                 shuffleIndexes[i] = i;
             }
             StdRandom.shuffle(shuffleIndexes);
@@ -110,7 +124,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
         @Override
         public boolean hasNext() {
-            return shffleIndexesIterator < shuffleIndexes.length;
+            return shuffleIndexesIterator < shuffleIndexes.length;
         }
 
         @Override
@@ -119,13 +133,8 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
                 throw new NoSuchElementException();
             }
 
-            // TODO: 16/02/19 Iterate in random order.
-            /**
-             * [ ] 1. Using another new RandomizedQueue Object
-             * [x] 2. Using the StdRandom.shuffle() method.
-             */
-            int index = (shuffleIndexes[shffleIndexesIterator] + head) % items.length;
-            shffleIndexesIterator++;
+            int index = (shuffleIndexes[shuffleIndexesIterator] + head) % items.length;
+            shuffleIndexesIterator++;
             return items[index];
         }
 
@@ -137,7 +146,133 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     }
 
 
-    public static void main(String [] args) {
+    public static void main(String[] args) {
+        // Unit test
+
+        // Normal
+        RandomizedQueue<Integer> randomizedQueue = new RandomizedQueue<>();
+
+        StdOut.println("Insert 20 items.");
+        for (int i = 1; i <= 20; i++) {
+            randomizedQueue.enqueue(i);
+        }
+
+        StdOut.println();
+
+        StdOut.println("Iterate all items at random");
+        for (Integer integer : randomizedQueue) {
+            StdOut.print(integer);
+            StdOut.print(", ");
+        }
+
+        StdOut.println();
+        StdOut.println();
+
+        StdOut.println("Try another iterator");
+        for (Integer integer : randomizedQueue) {
+            StdOut.print(integer);
+            StdOut.print(", ");
+        }
+
+        StdOut.println();
+        StdOut.println();
+
+        // Test head > last
+        StdOut.println("Test head > last");
+        for (int i = 0; i < 5 ; i++) {
+            randomizedQueue.dequeue();
+            randomizedQueue.enqueue(i);
+        }
+
+        StdOut.println();
+        StdOut.println("Now iterator it!");
+        for (Integer i :
+                randomizedQueue) {
+            StdOut.print(i);
+            StdOut.print(", ");
+        }
+
+        StdOut.println();
+        StdOut.println();
+
+        StdOut.println("Test the sample() method");
+        StdOut.println("The sample is " + randomizedQueue.sample());
+
+        StdOut.println();
+
+        StdOut.println("Remove all the items.");
+        while (!randomizedQueue.isEmpty()) {
+            StdOut.print(randomizedQueue.dequeue());
+            StdOut.print(", ");
+        }
+
+        StdOut.println();
+        StdOut.println();
+
+        // Special
+        if (randomizedQueue.isEmpty()) {
+            StdOut.println("Now the queue is empty");
+        } else {
+            StdOut.println("The queue is not empty");
+        }
+
+        StdOut.println();
+
+        StdOut.println("Try to insert one item.");
+        randomizedQueue.enqueue(1);
+        StdOut.println();
+
+        StdOut.println("Test the queue if is empty");
+        StdOut.println("Is the queue empty? " + randomizedQueue.isEmpty());
+
+        StdOut.println();
+
+        StdOut.println("Now remove it.");
+        randomizedQueue.dequeue();
+
+        StdOut.println();
+
+        StdOut.println("Test the queue if is empty");
+        StdOut.println("Is the queue empty? " + randomizedQueue.isEmpty());
+
+        StdOut.println();
+
+        StdOut.println("Now, reinsert it.");
+        randomizedQueue.enqueue(1);
+
+        StdOut.println();
+
+        StdOut.println("Test the queue if is empty");
+        StdOut.println("Is the queue empty? " + randomizedQueue.isEmpty());
+
+        StdOut.println();
+
+        StdOut.println("Restore empty");
+        while (!randomizedQueue.isEmpty()) {
+            randomizedQueue.dequeue();
+        }
+
+        // Corner case
+        try {
+            randomizedQueue.enqueue(null);
+        }
+        catch (NullPointerException e) {
+            StdOut.println("Try to enqueue a null object");
+        }
+
+        try {
+            randomizedQueue.dequeue();
+        }
+        catch (NoSuchElementException e) {
+            StdOut.println("Try to dequeue from a empty queue");
+        }
+
+        try {
+            randomizedQueue.iterator().remove();
+        }
+        catch (UnsupportedOperationException e) {
+            StdOut.println("Try to use iterator's remove() method");
+        }
 
     }
 }
