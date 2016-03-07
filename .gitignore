@@ -1,4 +1,4 @@
-### Example user template template
+# Created by .ignore support plugin (hsz.mobi)
 ### Example user template
 
 # IntelliJ project files
@@ -6,4 +6,6 @@
 *.iml
 out
 gen
-# Created by .ignore support plugin (hsz.mobi)
+
+# OS X files
+.DS_Store
