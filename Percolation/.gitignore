@@ -7,3 +7,6 @@
 *.iml
 out
 gen
+
+# OS X files
+.DS_Store
