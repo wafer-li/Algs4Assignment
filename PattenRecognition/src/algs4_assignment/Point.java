@@ -1,4 +1,6 @@
-package algs4_assignment; /******************************************************************************
+package algs4_assignment;
+
+/******************************************************************************
  *  Compilation:  javac Point.java
  *  Execution:    java Point
  *  Dependencies: none
@@ -10,6 +12,7 @@ package algs4_assignment; /*****************************************************
 
 import java.util.Comparator;
 import edu.princeton.cs.algs4.StdDraw;
+import edu.princeton.cs.algs4.StdOut;
 
 public class Point implements Comparable<Point> {
 
@@ -60,7 +63,21 @@ public class Point implements Comparable<Point> {
      */
     public double slopeTo(Point that) {
         /* YOUR CODE HERE */
-        return 0;
+        double xDifference = that.x - x;
+        double yDifference = that.y - y;
+
+        if (xDifference == 0 && yDifference == 0) {
+            return Double.NEGATIVE_INFINITY;
+        }
+        else if (xDifference == 0) {
+            return Double.POSITIVE_INFINITY;
+        }
+        else if (yDifference == 0) {
+            return +0.0;
+        }
+        else {
+            return yDifference / xDifference;
+        }
     }
 
     /**
@@ -76,8 +93,21 @@ public class Point implements Comparable<Point> {
      *         argument point
      */
     public int compareTo(Point that) {
-        /* YOUR CODE HERE */
-        return 0;
+        if (y < that.y) {
+            return -1;
+        }
+        else if (y > that.y) {
+            return 1;
+        }
+        else if (x < that.x) {
+            return -1;
+        }
+        else if (x > that.x) {
+            return 1;
+        }
+        else {
+            return 0;
+        }
     }
 
     /**
@@ -88,7 +118,18 @@ public class Point implements Comparable<Point> {
      */
     public Comparator<Point> slopeOrder() {
         /* YOUR CODE HERE */
-        return null;
+        return new SlopeOrder();
+    }
+
+    private class SlopeOrder implements Comparator<Point> {
+
+        @Override
+        public int compare(Point o1, Point o2) {
+            double slopeO1 = slopeTo(o1);
+            double slopeO2 = slopeTo(o2);
+
+            return (int) (slopeO1 - slopeO2);
+        }
     }
 
 
@@ -109,5 +150,13 @@ public class Point implements Comparable<Point> {
      */
     public static void main(String[] args) {
         /* YOUR CODE HERE */
+        StdOut.println((int) (Double.POSITIVE_INFINITY - Double.POSITIVE_INFINITY));
+        StdOut.println((int) (Double.NEGATIVE_INFINITY- Double.NEGATIVE_INFINITY));
+        StdOut.println((int) (Double.POSITIVE_INFINITY- Double.NEGATIVE_INFINITY));
+        StdOut.println((int) (Double.NEGATIVE_INFINITY- Double.POSITIVE_INFINITY));
+        StdOut.println((int) (+0.0 - Double.NEGATIVE_INFINITY));
+        StdOut.println((int) (+0.0 - Double.POSITIVE_INFINITY));
+        StdOut.println((int) (Double.POSITIVE_INFINITY - (+0.0)));
+        StdOut.println((int) (Double.NEGATIVE_INFINITY- (+0.0)));
     }
 }
