@@ -80,7 +80,7 @@ public class FastCollinearPoints {
         }
     }
 
-    public int numberOfSegment() {
+    public int numberOfSegments() {
         return collinear.length;
     }
 
