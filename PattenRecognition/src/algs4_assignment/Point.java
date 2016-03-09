@@ -10,9 +10,9 @@ package algs4_assignment;
  *
  ******************************************************************************/
 
-import java.util.Comparator;
 import edu.princeton.cs.algs4.StdDraw;
-import edu.princeton.cs.algs4.StdOut;
+
+import java.util.Comparator;
 
 public class Point implements Comparable<Point> {
 
@@ -128,7 +128,13 @@ public class Point implements Comparable<Point> {
             double slopeO1 = slopeTo(o1);
             double slopeO2 = slopeTo(o2);
 
-            return (int) (slopeO1 - slopeO2);
+            if (slopeO1 > slopeO2) {
+                return 1;
+            } else if (slopeO1 < slopeO2) {
+                return -1;
+            } else {
+                return 0;
+            }
         }
     }
 
@@ -150,13 +156,5 @@ public class Point implements Comparable<Point> {
      */
     public static void main(String[] args) {
         /* YOUR CODE HERE */
-        StdOut.println((int) (Double.POSITIVE_INFINITY - Double.POSITIVE_INFINITY));
-        StdOut.println((int) (Double.NEGATIVE_INFINITY- Double.NEGATIVE_INFINITY));
-        StdOut.println((int) (Double.POSITIVE_INFINITY- Double.NEGATIVE_INFINITY));
-        StdOut.println((int) (Double.NEGATIVE_INFINITY- Double.POSITIVE_INFINITY));
-        StdOut.println((int) (+0.0 - Double.NEGATIVE_INFINITY));
-        StdOut.println((int) (+0.0 - Double.POSITIVE_INFINITY));
-        StdOut.println((int) (Double.POSITIVE_INFINITY - (+0.0)));
-        StdOut.println((int) (Double.NEGATIVE_INFINITY- (+0.0)));
     }
 }
