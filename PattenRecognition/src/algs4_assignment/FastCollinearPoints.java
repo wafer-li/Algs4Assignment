@@ -17,7 +17,7 @@ import java.util.Arrays;
  */
 public class FastCollinearPoints {
 
-    private LineSegment[] collinear;
+    private ArrayList<LineSegment> collinear = new ArrayList<>();
 
     public FastCollinearPoints(Point[] points) {
 
@@ -25,8 +25,8 @@ public class FastCollinearPoints {
             throw new NullPointerException();
         }
 
+        points = Arrays.copyOf(points, points.length);
         Arrays.sort(points);
-        ArrayList<LineSegment> lineSegments = new ArrayList<>();
 
         Point[] sorted = new Point[points.length];
         System.arraycopy(points, 0, sorted, 0, points.length);
@@ -58,7 +58,7 @@ public class FastCollinearPoints {
                 if (slope == slopePrev) {
                     count++;
                 } else if (count >= 2) {
-                    lineSegments.add(new LineSegment(base, sorted[j - 1]));
+                    collinear.add(new LineSegment(base, sorted[j - 1]));
                     count = 0;
                 } else {
                     count = 0;
@@ -66,12 +66,9 @@ public class FastCollinearPoints {
             }
 
             if (count != 0) {
-                lineSegments.add(new LineSegment(base, sorted[j - 1]));
+                collinear.add(new LineSegment(base, sorted[j - 1]));
             }
         }
-
-        collinear = new LineSegment[lineSegments.size()];
-        collinear = lineSegments.toArray(collinear);
     }
 
     private void checkNullPointer(Point point) {
@@ -81,11 +78,13 @@ public class FastCollinearPoints {
     }
 
     public int numberOfSegments() {
-        return collinear.length;
+        return collinear.size();
     }
 
     public LineSegment[] segments() {
-        return collinear;
+        LineSegment[] collinearLines = new LineSegment[collinear.size()];
+        collinearLines = collinear.toArray(collinearLines);
+        return collinearLines;
     }
 
     public static void main(String[] args) {

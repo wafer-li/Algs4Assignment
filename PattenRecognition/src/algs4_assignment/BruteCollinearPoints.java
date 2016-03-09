@@ -1,8 +1,6 @@
 package algs4_assignment;
 
 import edu.princeton.cs.algs4.In;
-import edu.princeton.cs.algs4.StdDraw;
-import edu.princeton.cs.algs4.StdOut;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,7 +15,7 @@ import java.util.Arrays;
  */
 public class BruteCollinearPoints {
 
-    private LineSegment[] collinear;
+    private ArrayList<LineSegment> collinear = new ArrayList<>();
 
     public BruteCollinearPoints(Point[] points) {
 
@@ -25,8 +23,8 @@ public class BruteCollinearPoints {
             throw new NullPointerException();
         }
 
+        points = Arrays.copyOf(points, points.length);
         Arrays.sort(points);
-        ArrayList<LineSegment> lineSegments = new ArrayList<>();
 
         // Check four points P, Q, R, S
         for (int i = 0; i < points.length; i++) {
@@ -61,15 +59,12 @@ public class BruteCollinearPoints {
                         double slopePToS = points[i].slopeTo(points[w]);
 
                         if (slopePToR == slopePToS) {
-                            lineSegments.add(new LineSegment(points[i], points[w]));
+                            collinear.add(new LineSegment(points[i], points[w]));
                         }
                     }
                 }
             }
         }
-
-        collinear = new LineSegment[lineSegments.size()];
-        collinear = lineSegments.toArray(collinear);
     }
 
 
@@ -86,11 +81,13 @@ public class BruteCollinearPoints {
     }
 
     public int numberOfSegments() {
-        return collinear.length;
+        return collinear.size();
     }
 
     public LineSegment[] segments() {
-        return collinear;
+        LineSegment[] collinearLines = new LineSegment[collinear.size()];
+        collinearLines = collinear.toArray(collinearLines);
+        return collinearLines;
     }
 
     public static void main(String[] args) {
@@ -105,20 +102,21 @@ public class BruteCollinearPoints {
             points[i] = new Point(x, y);
         }
 
-        // draw the points
-        StdDraw.show(0);
-        StdDraw.setXscale(0, 32768);
-        StdDraw.setYscale(0, 32768);
-        for (Point p : points) {
-            p.draw();
-        }
-        StdDraw.show();
 
-        // print and draw the line segments
-        BruteCollinearPoints collinear = new BruteCollinearPoints(points);
-        for (LineSegment segment : collinear.segments()) {
-            StdOut.println(segment);
-            segment.draw();
-        }
+//        // draw the points
+//        StdDraw.show(0);
+//        StdDraw.setXscale(0, 32768);
+//        StdDraw.setYscale(0, 32768);
+//        for (Point p : points) {
+//            p.draw();
+//        }
+//        StdDraw.show();
+//
+//        // print and draw the line segments
+//        BruteCollinearPoints collinear = new BruteCollinearPoints(points);
+//        for (LineSegment segment : collinear.segments()) {
+//            StdOut.println(segment);
+//            segment.draw();
+//        }
     }
 }
