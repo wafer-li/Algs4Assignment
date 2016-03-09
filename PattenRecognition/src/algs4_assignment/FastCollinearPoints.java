@@ -25,6 +25,7 @@ public class FastCollinearPoints {
             throw new NullPointerException();
         }
 
+        Arrays.sort(points);
         ArrayList<LineSegment> lineSegments = new ArrayList<>();
 
         Point[] sorted = new Point[points.length];
@@ -48,21 +49,24 @@ public class FastCollinearPoints {
 
             Arrays.sort(sorted, points[i].slopeOrder());
 
-            double slope = base.slopeTo(sorted[0]);
             int count = 0;
-            for (int j = 1; j < sorted.length; j++) {
-                double slopeNext = base.slopeTo(points[j]);
+            int j;
+            for (j = 1; j < sorted.length; j++) {
+                double slope = base.slopeTo(sorted[j]);
+                double slopePrev = base.slopeTo(sorted[j - 1]);
 
-                if (slope == slopeNext) {
+                if (slope == slopePrev) {
                     count++;
                 } else if (count >= 2) {
-                    lineSegments.add(new LineSegment(base, sorted[count]));
+                    lineSegments.add(new LineSegment(base, sorted[j - 1]));
                     count = 0;
                 } else {
                     count = 0;
                 }
+            }
 
-                slope = slopeNext;
+            if (count != 0) {
+                lineSegments.add(new LineSegment(base, sorted[j - 1]));
             }
         }
 

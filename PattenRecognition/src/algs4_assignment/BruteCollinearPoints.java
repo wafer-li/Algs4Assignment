@@ -5,6 +5,7 @@ import edu.princeton.cs.algs4.StdDraw;
 import edu.princeton.cs.algs4.StdOut;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * This is the BruteCollinearPoints class.
@@ -24,6 +25,7 @@ public class BruteCollinearPoints {
             throw new NullPointerException();
         }
 
+        Arrays.sort(points);
         ArrayList<LineSegment> lineSegments = new ArrayList<>();
 
         // Check four points P, Q, R, S
