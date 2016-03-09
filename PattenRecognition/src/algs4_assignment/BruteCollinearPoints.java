@@ -1,6 +1,8 @@
 package algs4_assignment;
 
 import edu.princeton.cs.algs4.In;
+import edu.princeton.cs.algs4.StdDraw;
+import edu.princeton.cs.algs4.StdOut;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -103,20 +105,20 @@ public class BruteCollinearPoints {
         }
 
 
-//        // draw the points
-//        StdDraw.show(0);
-//        StdDraw.setXscale(0, 32768);
-//        StdDraw.setYscale(0, 32768);
-//        for (Point p : points) {
-//            p.draw();
-//        }
-//        StdDraw.show();
-//
-//        // print and draw the line segments
-//        BruteCollinearPoints collinear = new BruteCollinearPoints(points);
-//        for (LineSegment segment : collinear.segments()) {
-//            StdOut.println(segment);
-//            segment.draw();
-//        }
+        // draw the points
+        StdDraw.show(0);
+        StdDraw.setXscale(0, 32768);
+        StdDraw.setYscale(0, 32768);
+        for (Point p : points) {
+            p.draw();
+        }
+        StdDraw.show();
+
+        // print and draw the line segments
+        BruteCollinearPoints collinear = new BruteCollinearPoints(points);
+        for (LineSegment segment : collinear.segments()) {
+            StdOut.println(segment);
+            segment.draw();
+        }
     }
 }
