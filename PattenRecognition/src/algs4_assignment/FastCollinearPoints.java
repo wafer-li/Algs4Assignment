@@ -20,55 +20,63 @@ public class FastCollinearPoints {
     private ArrayList<LineSegment> collinear = new ArrayList<>();
 
     public FastCollinearPoints(Point[] points) {
-
         if (points == null) {
             throw new NullPointerException();
         }
 
+        // Make a copy to avoid mutating the input
         points = Arrays.copyOf(points, points.length);
+
+        if (hasDuplicated(points)) {
+            throw new IllegalArgumentException();
+        }
+
+        // A segment need at least 4 points
+        // Therefore, we do not need to check the last 3
+        for (int i = 0; i < points.length - 3; i++) {
+            // Sort with their natural order to
+            // avoid using a copy
+            Arrays.sort(points);
+            Arrays.sort(points, points[i].slopeOrder());
+            findSegments(points);
+        }
+    }
+
+    private void findSegments(Point[] points) {
+        int start = 1, end = 2;
+        Point base = points[0];
+
+        while (end < points.length) {
+            while (end < points.length &&
+                    base.slopeTo(points[start]) == base.slopeTo(points[end])) {
+                end++;
+            }
+
+            // Base need to be the least point,
+            // to avoid the subSegments.
+            // And because java use MergeSort for reference,
+            // so we only need to compare with the start.
+            if (end - start >= 3 && base.compareTo(points[start]) < 0) {
+                collinear.add(new LineSegment(base, points[end - 1]));
+            }
+
+            start = end;
+            end++;
+        }
+    }
+
+    private boolean hasDuplicated(Point[] points) {
         Arrays.sort(points);
 
-        Point[] sorted = new Point[points.length];
-        System.arraycopy(points, 0, sorted, 0, points.length);
-
-        Point prev = null;
-        for (int i = 0; i < points.length; i++) {
+        for (int i = 0; i < points.length - 1; i++) {
 
             checkNullPointer(points[i]);
 
-            // Check repeated point
-            if (i == 0) {
-                prev = points[i];
-            } else if (prev.compareTo(points[i]) == 0) {
-                throw new IllegalArgumentException();
-            } else {
-                prev = points[i];
-            }
-
-            Point base = points[i];
-
-            Arrays.sort(sorted, points[i].slopeOrder());
-
-            int count = 0;
-            int j;
-            for (j = 1; j < sorted.length; j++) {
-                double slope = base.slopeTo(sorted[j]);
-                double slopePrev = base.slopeTo(sorted[j - 1]);
-
-                if (slope == slopePrev) {
-                    count++;
-                } else if (count >= 2) {
-                    collinear.add(new LineSegment(base, sorted[j - 1]));
-                    count = 0;
-                } else {
-                    count = 0;
-                }
-            }
-
-            if (count != 0) {
-                collinear.add(new LineSegment(base, sorted[j - 1]));
+            if (points[i].compareTo(points[i + 1]) == 0) {
+                return true;
             }
         }
+        return false;
     }
 
     private void checkNullPointer(Point point) {
