@@ -30,7 +30,7 @@ public class Solver {
 
         private int priority() {
             if (cachedPriority == -1) {
-                cachedPriority = moves + board.hamming();
+                cachedPriority = moves + board.manhattan();
             }
 
             return cachedPriority;
