@@ -40,11 +40,9 @@ public class Solver {
         public int compareTo(SearchNode o) {
             if (this.priority() > o.priority()) {
                 return 1;
-            }
-            else if (this.priority() < o.priority()) {
+            } else if (this.priority() < o.priority()) {
                 return -1;
-            }
-            else {
+            } else {
                 return 0;
             }
         }
@@ -67,8 +65,7 @@ public class Solver {
 
         if (goal == null) {
             moves = -1;
-        }
-        else {
+        } else {
             moves = goal.moves;
         }
     }
@@ -118,14 +115,12 @@ public class Solver {
     private void insertNeighbor(SearchNode node, MinPQ<SearchNode> pq) {
         for (Board board
                 : node.board.neighbors()) {
-            if (node.prev == null) {
-                SearchNode nodeNeighbor = new SearchNode(board, node.moves + 1, node);
-                pq.insert(nodeNeighbor);
+            if (node.prev != null && board.equals(node.prev.board)) {
+                continue;
             }
-            else if (!board.equals(node.prev.board)) {
-                SearchNode nodeNeighbor = new SearchNode(board, node.moves + 1, node);
-                pq.insert(nodeNeighbor);
-            }
+
+            SearchNode neighbor = new SearchNode(board, node.moves + 1, node);
+            pq.insert(neighbor);
         }
     }
 
@@ -141,7 +136,7 @@ public class Solver {
         return solutions;
     }
 
-    public static void main(String [] args) {
+    public static void main(String[] args) {
 
         // create initial board from file
         In in = new In(args[0]);
