@@ -1,5 +1,6 @@
 package algs4_assignment;
 
+import edu.princeton.cs.algs4.BoruvkaMST;
 import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.MinPQ;
 import edu.princeton.cs.algs4.StdOut;
@@ -17,7 +18,7 @@ import java.util.List;
  */
 public class Solver {
 
-    private class SearchNode implements Comparable<Board> {
+    private class SearchNode implements Comparable<SearchNode> {
 
         private Board board;
         private int moves;
@@ -29,9 +30,13 @@ public class Solver {
             this.prev = prev;
         }
 
+        private int priority() {
+            return board.hamming() + moves;
+        }
+
         @Override
-        public int compareTo(Board o) {
-            return 0;
+        public int compareTo(SearchNode o) {
+            return priority() - o.priority();
         }
     }
 
@@ -132,16 +137,21 @@ public class Solver {
                 blocks[i][j] = in.readInt();
         Board initial = new Board(blocks);
 
-        // solve the puzzle
-        Solver solver = new Solver(initial);
-
-        // print solution to standard output
-        if (!solver.isSolvable())
-            StdOut.println("No solution possible");
-        else {
-            StdOut.println("Minimum number of moves = " + solver.moves());
-            for (Board board : solver.solution())
-                StdOut.println(board);
+        for (Board board
+                : initial.neighbors()) {
+            StdOut.println(board);
         }
+
+//        // solve the puzzle
+//        Solver solver = new Solver(initial);
+//
+//        // print solution to standard output
+//        if (!solver.isSolvable())
+//            StdOut.println("No solution possible");
+//        else {
+//            StdOut.println("Minimum number of moves = " + solver.moves());
+//            for (Board board : solver.solution())
+//                StdOut.println(board);
+//        }
     }
 }

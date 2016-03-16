@@ -42,7 +42,7 @@ public class Board {
 
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < N; j++) {
-                if (pieces[i][j] != goalValueAt(i, j)) {
+                if (pieces[i][j] != goalValueAt(i, j) && pieces[i][j] != 0)  {
                     count++;
                 }
             }
@@ -76,8 +76,8 @@ public class Board {
                 int value = pieces[i][j];
 
                 if (value != 0 && value != goalValueAt(i, j)) {
-                    int goalX = value / N;
-                    int goalY = value % N - 1;
+                    int goalX = (value - 1) / N;
+                    int goalY = value - 1 - goalX * N;
                     int distance = Math.abs(i - goalX) + Math.abs(j - goalY);
 
                     sum += distance;
@@ -186,6 +186,11 @@ public class Board {
         }
 
         Board that = (Board) obj;
+
+        if (that.pieces.length != this.pieces.length) {
+            return false;
+        }
+
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < N; j++) {
                 if (this.pieces[i][j] != that.pieces[i][j]) {
@@ -200,10 +205,11 @@ public class Board {
     @Override
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(N).append("\n");
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < N; j++) {
-                stringBuilder.append(pieces[i][j]);
-                stringBuilder.append("\t");
+                stringBuilder.append(String.format("%2d", pieces[i][j]));
+                stringBuilder.append(" ");
             }
             stringBuilder.append("\n");
         }
