@@ -1,7 +1,11 @@
 package algs4_assignment;
 
 import edu.princeton.cs.algs4.In;
+import edu.princeton.cs.algs4.MinPQ;
 import edu.princeton.cs.algs4.StdOut;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This is the Solver class.
@@ -13,20 +17,108 @@ import edu.princeton.cs.algs4.StdOut;
  */
 public class Solver {
 
-    public Solver(Board initial) {
+    private class SearchNode implements Comparable<Board> {
 
+        private Board board;
+        private int moves;
+        private SearchNode prev;
+
+        public SearchNode(Board board, int moves, SearchNode prev) {
+            this.board = board;
+            this.moves = moves;
+            this.prev = prev;
+        }
+
+        @Override
+        public int compareTo(Board o) {
+            return 0;
+        }
+    }
+
+    private boolean isSolvable;
+    private final int moves;
+
+    private List<Board> solutions;
+
+    public Solver(Board initial) {
+        if (initial == null) {
+            throw new NullPointerException();
+        }
+
+        SearchNode originNode = new SearchNode(initial, 0, null);
+        SearchNode twinNode = new SearchNode(initial.twin(), 0, null);
+
+        SearchNode goal = solve(originNode, twinNode);
+
+        if (goal == null) {
+            moves = -1;
+        }
+        else {
+            moves = goal.moves;
+        }
+    }
+
+    private SearchNode solve(SearchNode origin, SearchNode twin) {
+        MinPQ<SearchNode> pq = new MinPQ<>();
+        MinPQ<SearchNode> pqTwin = new MinPQ<>();
+
+        pq.insert(origin);
+        pq.insert(twin);
+
+        SearchNode goal = null;
+        solutions = new ArrayList<>();
+
+        while (true) {
+            SearchNode node = pq.delMin();
+            SearchNode nodeTwin = pqTwin.delMin();
+
+            solutions.add(node.board);
+
+            // Check the removed node and its twin
+            if (node.board.isGoal()) {
+                isSolvable = true;
+                goal = node;
+                break;
+            }
+
+            if (nodeTwin.board.isGoal()) {
+                isSolvable = false;
+                solutions = null;
+                break;
+            }
+
+            // Get neighbors and insert
+            insertNeighbor(node, pq);
+            insertNeighbor(nodeTwin, pqTwin);
+        }
+
+        return goal;
+    }
+
+    private void insertNeighbor(SearchNode node, MinPQ<SearchNode> pq) {
+        for (Board board
+                : node.board.neighbors()) {
+            if (node.prev == null) {
+                SearchNode nodeNeighbor = new SearchNode(board, node.moves + 1, node);
+                pq.insert(nodeNeighbor);
+            }
+            else if (!board.equals(node.prev.board)) {
+                SearchNode nodeNeighbor = new SearchNode(board, node.moves + 1, node);
+                pq.insert(nodeNeighbor);
+            }
+        }
     }
 
     public boolean isSolvable() {
-        return false;
+        return isSolvable;
     }
 
     public int moves() {
-        return 0;
+        return moves;
     }
 
     public Iterable<Board> solution() {
-        return null;
+        return solutions;
     }
 
     public static void main(String [] args) {
