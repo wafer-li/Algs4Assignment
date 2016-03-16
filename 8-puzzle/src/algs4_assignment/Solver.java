@@ -23,6 +23,7 @@ public class Solver {
         private Board board;
         private int moves;
         private SearchNode prev;
+        private int cachedPriority = -1;
 
         public SearchNode(Board board, int moves, SearchNode prev) {
             this.board = board;
@@ -31,12 +32,24 @@ public class Solver {
         }
 
         private int priority() {
-            return board.hamming() + moves;
+            if (cachedPriority == -1) {
+                cachedPriority = moves + board.hamming();
+            }
+
+            return cachedPriority;
         }
 
         @Override
         public int compareTo(SearchNode o) {
-            return priority() - o.priority();
+            if (this.priority() > o.priority()) {
+                return 1;
+            }
+            else if (this.priority() < o.priority()) {
+                return -1;
+            }
+            else {
+                return 0;
+            }
         }
     }
 
@@ -77,12 +90,17 @@ public class Solver {
             SearchNode node = pq.delMin();
             SearchNode nodeTwin = pqTwin.delMin();
 
-            solutions.add(node.board);
-
             // Check the removed node and its twin
             if (node.board.isGoal()) {
                 isSolvable = true;
                 goal = node;
+                solutions.add(node.board);
+
+                while (node.prev != null) {
+                    node = node.prev;
+                    solutions.add(node.board);
+                }
+
                 break;
             }
 
