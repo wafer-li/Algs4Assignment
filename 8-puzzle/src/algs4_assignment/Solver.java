@@ -1,12 +1,9 @@
 package algs4_assignment;
 
-import edu.princeton.cs.algs4.BoruvkaMST;
 import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.MinPQ;
+import edu.princeton.cs.algs4.Stack;
 import edu.princeton.cs.algs4.StdOut;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * This is the Solver class.
@@ -56,7 +53,7 @@ public class Solver {
     private boolean isSolvable;
     private final int moves;
 
-    private List<Board> solutions;
+    private Stack<Board> solutions;
 
     public Solver(Board initial) {
         if (initial == null) {
@@ -84,7 +81,7 @@ public class Solver {
         pqTwin.insert(twin);
 
         SearchNode goal = null;
-        solutions = new ArrayList<>();
+        solutions = new Stack<>();
 
         while (true) {
             SearchNode node = pq.delMin();
@@ -94,11 +91,11 @@ public class Solver {
             if (node.board.isGoal()) {
                 isSolvable = true;
                 goal = node;
-                solutions.add(node.board);
+                solutions.push(node.board);
 
                 while (node.prev != null) {
                     node = node.prev;
-                    solutions.add(node.board);
+                    solutions.push(node.board);
                 }
 
                 break;
