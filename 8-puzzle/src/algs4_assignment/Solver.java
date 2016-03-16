@@ -68,7 +68,7 @@ public class Solver {
         MinPQ<SearchNode> pqTwin = new MinPQ<>();
 
         pq.insert(origin);
-        pq.insert(twin);
+        pqTwin.insert(twin);
 
         SearchNode goal = null;
         solutions = new ArrayList<>();
@@ -137,21 +137,16 @@ public class Solver {
                 blocks[i][j] = in.readInt();
         Board initial = new Board(blocks);
 
-        for (Board board
-                : initial.neighbors()) {
-            StdOut.println(board);
-        }
+        // solve the puzzle
+        Solver solver = new Solver(initial);
 
-//        // solve the puzzle
-//        Solver solver = new Solver(initial);
-//
-//        // print solution to standard output
-//        if (!solver.isSolvable())
-//            StdOut.println("No solution possible");
-//        else {
-//            StdOut.println("Minimum number of moves = " + solver.moves());
-//            for (Board board : solver.solution())
-//                StdOut.println(board);
-//        }
+        // print solution to standard output
+        if (!solver.isSolvable())
+            StdOut.println("No solution possible");
+        else {
+            StdOut.println("Minimum number of moves = " + solver.moves());
+            for (Board board : solver.solution())
+                StdOut.println(board);
+        }
     }
 }
