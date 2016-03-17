@@ -46,7 +46,7 @@ There is two priority function according the specification.
 2. The Manhattan Priority
 
     > The sum of the manhattan distance between the blocks and goal  
-    + The number of the moves so far to get to the node
+    > \+ The number of the moves so far to get to the node
     
     > Manhattan distance: The horizontal distance + The vertical distance
     
