@@ -3,6 +3,7 @@ package algs4_assignment;
 import edu.princeton.cs.algs4.Point2D;
 import edu.princeton.cs.algs4.RectHV;
 import edu.princeton.cs.algs4.SET;
+import edu.princeton.cs.algs4.StdDraw;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,6 +71,10 @@ public class PointSET {
      * Draw all the points to std draw
      */
     public void draw() {
+
+        StdDraw.setPenColor(StdDraw.BLACK);
+        StdDraw.setPenRadius(.01);
+
         for (Point2D point
                 : point2DSET) {
             point.draw();
