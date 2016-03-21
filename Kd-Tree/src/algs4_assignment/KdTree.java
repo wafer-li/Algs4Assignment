@@ -273,11 +273,32 @@ public class KdTree {
      * @return The closest point to the given point
      */
     public Point2D nearest(Point2D p) {
-        return nearest(root, p);
+        Point2D champion = null;
+        nearest(root, champion, p);
+        return champion;
     }
 
-    private Point2D nearest(Node node, Point2D p) {
-        return null;
+    private void nearest(Node node, Point2D champion, Point2D p) {
+
+        if (node == null) {
+            return;
+        }
+
+        if (champion == null) {
+            champion = node.p;
+        }
+
+        // Check if the rectangle is farther than champion
+        if (champion.distanceSquaredTo(p) >= node.rectHV.distanceSquaredTo(p)) {
+            // Nope, check distance and update champion
+            if (node.p.distanceSquaredTo(p) < champion.distanceSquaredTo(p)) {
+                champion = node.p;
+            } else {
+                // deep into subtrees
+                nearest(node.lb, champion, p);
+                nearest(node.rt, champion, p);
+            }
+        }
     }
 
     public static void main(String[] args) {
