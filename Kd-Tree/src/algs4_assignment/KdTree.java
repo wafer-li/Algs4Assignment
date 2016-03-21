@@ -38,10 +38,12 @@ public class KdTree {
     private final boolean EVEN_LEVEL = false;
     private final boolean ODD_LEVEL = true;
 
+    private Point2D champion;
 
     public KdTree() {
         root = null;
         N = 0;
+        champion = null;
     }
 
     public boolean isEmpty() {
@@ -273,12 +275,11 @@ public class KdTree {
      * @return The closest point to the given point
      */
     public Point2D nearest(Point2D p) {
-        Point2D champion = null;
-        nearest(root, champion, p);
+        nearest(root, p);
         return champion;
     }
 
-    private void nearest(Node node, Point2D champion, Point2D p) {
+    private void nearest(Node node, Point2D p) {
 
         if (node == null) {
             return;
@@ -295,8 +296,8 @@ public class KdTree {
                 champion = node.p;
             } else {
                 // deep into subtrees
-                nearest(node.lb, champion, p);
-                nearest(node.rt, champion, p);
+                nearest(node.lb, p);
+                nearest(node.rt, p);
             }
         }
     }
