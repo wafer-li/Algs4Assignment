@@ -55,7 +55,7 @@ public class KdTree {
     }
 
     public void insert(Point2D p) {
-        root = insert(root, null, false, p);
+        root = insert(root, null, EVEN_LEVEL, p);
         N++;
     }
 
