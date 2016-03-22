@@ -1,8 +1,6 @@
 package algs4_assignment;
 
-import edu.princeton.cs.algs4.Point2D;
-import edu.princeton.cs.algs4.RectHV;
-import edu.princeton.cs.algs4.StdDraw;
+import edu.princeton.cs.algs4.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,6 +53,10 @@ public class KdTree {
     }
 
     public void insert(Point2D p) {
+        if (contains(p)) {
+            return;
+        }
+
         root = insert(root, null, EVEN_LEVEL, p);
         N++;
     }
@@ -303,6 +305,28 @@ public class KdTree {
     }
 
     public static void main(String[] args) {
+        KdTree kdTree = new KdTree();
 
+        double i_reference = 0.0, j_reference = 0.0;
+
+        // Generate points
+        for (int k = 0; k < 50000; k++) {
+
+            int i = StdRandom.uniform(0, 10);
+            int j = StdRandom.uniform(0, 10);
+
+            kdTree.insert(new Point2D(i / 10.0, j / 10.0));
+
+            if (k == 0) {
+                i_reference = i / 10.0;
+                j_reference = j / 10.0;
+            }
+        }
+
+        Point2D reference = new Point2D(i_reference, j_reference);
+
+        StdOut.println("The reference is " + reference);
+
+        StdOut.println(kdTree.nearest(reference));
     }
 }
