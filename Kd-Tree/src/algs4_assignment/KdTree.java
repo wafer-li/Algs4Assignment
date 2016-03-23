@@ -290,15 +290,56 @@ public class KdTree {
 
         // Determine whether deep into subtree
         if (node.rectHV.distanceSquaredTo(p) < champion.distanceSquaredTo(p)) {
-            // Yes
+            // Find which we deep into first
 
-            // Update champion
-            if (node.p.distanceSquaredTo(p) < champion.distanceSquaredTo(p)) {
-                champion = node.p;
+            double leftMin, rightMin;
+
+            if (node.lb != null && node.rt != null) {
+                // Now its possible of both sides
+
+                leftMin = node.lb.rectHV.distanceSquaredTo(p);
+                rightMin = node.rt.rectHV.distanceSquaredTo(p);
+
+                if (leftMin < rightMin) {
+                    // Left is more possible
+                    // Left first
+
+                    champion = nearest(node.lb, champion, p);
+
+                    if (rightMin < champion.distanceSquaredTo(p)) {
+                        // Right still possible
+                        // Deep into right
+
+                        champion = nearest(node.rt, champion, p);
+                    }
+                } else {
+                    // Right is more possible
+                    // Right first
+
+                    champion = nearest(node.rt, champion, p);
+
+                    if (leftMin < champion.distanceSquaredTo(p)) {
+                        // Left still possible
+                        // Deep into left
+
+                        champion = nearest(node.lb, champion, p);
+                    }
+                }
+            } else if (node.lb != null) {
+                // Right is null
+
+                // Check rectangle
+                if (node.lb.rectHV.distanceSquaredTo(p) < champion.distanceSquaredTo(p)) {
+                    champion = nearest(node.lb, champion, p);
+                }
+            } else if (node.rt != null) {
+                // Left is null
+
+                // Check rectangle
+                if (node.rt.rectHV.distanceSquaredTo(p) < champion.distanceSquaredTo(p)) {
+                    champion = nearest(node.rt, champion, p);
+                }
             }
-
-            champion = nearest(node.lb, champion, p);
-            champion = nearest(node.rt, champion, p);
         }
 
         return champion;
