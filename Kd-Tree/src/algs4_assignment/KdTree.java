@@ -274,7 +274,12 @@ public class KdTree {
      * @return The closest point to the given point
      */
     public Point2D nearest(Point2D p) {
-        return nearest(root, null, p);
+
+        if (root == null) {
+            return null;
+        }
+
+        return nearest(root, root.p, p);
     }
 
     private Point2D nearest(Node node, Point2D champion, Point2D p) {
@@ -283,18 +288,14 @@ public class KdTree {
             return champion;
         }
 
-        if (champion == null) {
-            champion = node.p;
-        }
-
-        // Update champion
-        if (node.p.distanceSquaredTo(p) < champion.distanceSquaredTo(p)) {
-            champion = node.p;
-        }
-
         // Determine whether deep into subtree
         if (node.rectHV.distanceSquaredTo(p) < champion.distanceSquaredTo(p)) {
             // Yes
+
+            // Update champion
+            if (node.p.distanceSquaredTo(p) < champion.distanceSquaredTo(p)) {
+                champion = node.p;
+            }
 
             champion = nearest(node.lb, champion, p);
             champion = nearest(node.rt, champion, p);
