@@ -50,6 +50,9 @@ public class KdTree {
     }
 
     public void insert(Point2D p) {
+
+        checkNull(p);
+
         if (contains(p)) {
             return;
         }
@@ -132,6 +135,7 @@ public class KdTree {
 
 
     public boolean contains(Point2D p) {
+        checkNull(p);
         return contains(root, false, p) != null;
     }
 
@@ -238,6 +242,9 @@ public class KdTree {
      * @return The list of the points
      */
     public Iterable<Point2D> range(RectHV rectHV) {
+
+        checkNull(rectHV);
+
         List<Point2D> point2DList = new ArrayList<>();
         range(root, rectHV, point2DList);
         return point2DList;
@@ -274,6 +281,8 @@ public class KdTree {
      * @return The closest point to the given point
      */
     public Point2D nearest(Point2D p) {
+
+        checkNull(p);
 
         if (root == null) {
             return null;
@@ -343,6 +352,12 @@ public class KdTree {
         }
 
         return champion;
+    }
+
+    private void checkNull(Object object) {
+        if (object == null) {
+            throw new NullPointerException();
+        }
     }
 
     public static void main(String[] args) {

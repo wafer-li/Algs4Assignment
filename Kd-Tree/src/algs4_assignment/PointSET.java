@@ -52,6 +52,9 @@ public class PointSET {
      * @param p The point to be inserted
      */
     public void insert(Point2D p) {
+
+        checkNull(p);
+
         if (!point2DSET.contains(p)) {
             point2DSET.add(p);
         }
@@ -64,6 +67,7 @@ public class PointSET {
      * @return True if contains.
      */
     public boolean contains(Point2D p) {
+        checkNull(p);
         return point2DSET.contains(p);
     }
 
@@ -87,6 +91,9 @@ public class PointSET {
      * @return The points inside the rectangle
      */
     public Iterable<Point2D> range(RectHV rect) {
+
+        checkNull(rect);
+
         List<Point2D> point2DList = new ArrayList<>();
 
         for (Point2D point
@@ -100,6 +107,9 @@ public class PointSET {
     }
 
     public Point2D nearest(Point2D p) {
+
+        checkNull(p);
+
         double distance = -1;
         Point2D goal = null;
 
@@ -118,6 +128,12 @@ public class PointSET {
         }
 
         return goal;
+    }
+
+    private void checkNull(Object object) {
+        if (object == null) {
+            throw new NullPointerException();
+        }
     }
 
     public static void main(String [] args) {
