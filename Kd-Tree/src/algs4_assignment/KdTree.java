@@ -284,62 +284,62 @@ public class KdTree {
 
     private Point2D nearest(Node node, Point2D champion, Point2D p) {
 
-        if (node == null) {
+        // Cache distance
+        double minDistance = champion.distanceSquaredTo(p);
+        double distance = node.p.distanceSquaredTo(p);
+
+        // Update champion
+        if (distance < minDistance) {
+            champion = node.p;
+            minDistance = distance;
+        }
+
+        // Check whether subtree go
+
+        if (node.lb == null && node.rt == null) {
             return champion;
         }
 
-        // Determine whether deep into subtree
-        if (node.rectHV.distanceSquaredTo(p) < champion.distanceSquaredTo(p)) {
-            // Find which we deep into first
-
-            double leftMin, rightMin;
-
-            if (node.lb != null && node.rt != null) {
-                // Now its possible of both sides
-
-                leftMin = node.lb.rectHV.distanceSquaredTo(p);
-                rightMin = node.rt.rectHV.distanceSquaredTo(p);
-
-                if (leftMin < rightMin) {
-                    // Left is more possible
-                    // Left first
-
-                    champion = nearest(node.lb, champion, p);
-
-                    if (rightMin < champion.distanceSquaredTo(p)) {
-                        // Right still possible
-                        // Deep into right
-
-                        champion = nearest(node.rt, champion, p);
-                    }
-                } else {
-                    // Right is more possible
-                    // Right first
-
-                    champion = nearest(node.rt, champion, p);
-
-                    if (leftMin < champion.distanceSquaredTo(p)) {
-                        // Left still possible
-                        // Deep into left
-
-                        champion = nearest(node.lb, champion, p);
-                    }
-                }
-            } else if (node.lb != null) {
-                // Right is null
-
-                // Check rectangle
-                if (node.lb.rectHV.distanceSquaredTo(p) < champion.distanceSquaredTo(p)) {
-                    champion = nearest(node.lb, champion, p);
-                }
-            } else if (node.rt != null) {
-                // Left is null
-
-                // Check rectangle
-                if (node.rt.rectHV.distanceSquaredTo(p) < champion.distanceSquaredTo(p)) {
-                    champion = nearest(node.rt, champion, p);
-                }
+        if (node.lb != null && node.rt == null) {
+            // The right side is empty
+            if (minDistance > node.lb.rectHV.distanceSquaredTo(p)) {
+                champion = nearest(node.lb, champion, p);
             }
+
+            return champion;
+        }
+
+        if (node.lb == null) {
+            // Now the right side must be NOT empty
+            if (minDistance > node.rt.rectHV.distanceSquaredTo(p)) {
+                champion = nearest(node.rt, champion, p);
+            }
+
+            return champion;
+        }
+
+        // Now the both side is NOT empty
+        // Check the near p side first
+
+        Node near, far;
+
+        if (node.lb.rectHV.contains(p)) {
+            // P is at the left side
+            near = node.lb;
+            far = node.rt;
+        }
+        else {
+            near = node.rt;
+            far = node.lb;
+        }
+
+        // Check the near
+        champion = nearest(near, champion, p);
+
+        // If the far side is still possible
+        // That is the champion distance is large than the far rectangle
+        if (champion.distanceSquaredTo(p) > far.rectHV.distanceSquaredTo(p)) {
+            champion = nearest(far, champion, p);
         }
 
         return champion;
