@@ -1,5 +1,3 @@
-package algs4_assignment;
-
 /*************************************************************************
  *  Compilation:  javac LineSegment.java
  *  Execution:    none

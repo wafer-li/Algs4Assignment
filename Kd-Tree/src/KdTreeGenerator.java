@@ -1,4 +1,4 @@
-package algs4_assignment; /******************************************************************************
+/******************************************************************************
  * Compilation:  javac KdTreeGenerator.java
  * Execution:    java KdTreeGenerator N
  * Dependencies:

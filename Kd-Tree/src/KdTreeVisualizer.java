@@ -1,4 +1,3 @@
-package algs4_assignment;
 /******************************************************************************
  * Compilation:  javac KdTreeVisualizer.java
  * Execution:    java KdTreeVisualizer
