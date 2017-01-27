@@ -27,6 +27,8 @@ public class Percolation {
 
     private int N;  // The N-by-N
 
+    private int numberOfOpenSites = 0;
+
     /**
      * There is the statuses of the site.
      * By far, I define that it could has 3 statuses
@@ -122,6 +124,7 @@ public class Percolation {
 
         if (!isOpen(i, j)) {
             grid[calculateId(i, j)] = OPEN;
+            numberOfOpenSites++;
 
             // Link to the top or mark as connected to bottom
             if (i == 1) {
@@ -194,6 +197,10 @@ public class Percolation {
         }
 
         return auxUf.connected(calculateId(i, j), virtualTopIndex);
+    }
+
+    public int numberOfOpenSites() {
+        return numberOfOpenSites;
     }
 
 
