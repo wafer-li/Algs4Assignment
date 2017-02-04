@@ -10,7 +10,7 @@ import edu.princeton.cs.algs4.StdRandom;
  * @version 1.0.0
  * @since 16/3/5 17:09
  */
-public class Subset {
+public class Permutation {
     public static void main(String [] args) {
         int k = Integer.parseInt(args[0]);
         String [] strings = StdIn.readAllStrings();
